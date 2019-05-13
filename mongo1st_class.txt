@@ -1,0 +1,415 @@
+student@student:~$ mongo
+MongoDB shell version: 3.2.22
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+Server has startup warnings: 
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] 
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] 
+> cls
+
+
+
+
+
+
+
+> use mca
+switched to db mca
+> db
+mca
+> show dbs
+local  0.000GB
+> db.dropDatabase
+function () {
+        if (arguments.length)
+            throw Error("dropDatabase doesn't take arguments");
+        return this._dbCommand({dropDatabase: 1});
+    }
+> db.dropMca
+mca.dropMca
+> db.dropDatabase()
+{ "ok" : 1 }
+> db.dropMca()
+2019-01-18T02:06:16.811+0530 E QUERY    [thread1] TypeError: db.dropMca is not a function :
+@(shell):1:1
+
+> db
+mca
+> db.dropMca()
+2019-01-18T02:06:34.859+0530 E QUERY    [thread1] TypeError: db.dropMca is not a function :
+@(shell):1:1
+
+> db
+mca
+> db.createCollection("mca1",{capped:true,size:5242880,max:5000})
+{ "ok" : 1 }
+> autoIndexID
+2019-01-18T02:13:01.752+0530 E QUERY    [thread1] ReferenceError: autoIndexID is not defined :
+@(db.createCollection("mca1",{capped:true,size:5242880,max:5000,autoIndexID:true})
+{ "ok" : 0, "errmsg" : "collection already exists", "code" : 48 }
+> db.createCollection("mca1",{capped:true,size:5242880,max:5000,autoIndexID:true})
+{ "ok" : 0, "errmsg" : "collection already exists", "code" : 48 }
+> db.mca1.insert({_id:1,name:"ABC",Semester:4})
+WriteResult({ "nInserted" : 1 })
+> db.mca1.insert({_id:2,name:"XYZ"})
+WriteResult({ "nInserted" : 1 })
+> db.mca1.insert({_id:3,mark1:50,mark2:100,mark3:95"})
+]2019-01-18T02:21:38.371+0530 E QUERY    [thread1] SyntaxError: unterminated string literal @(shell):1:49
+
+> db.mca1.insert({_id:3,mark1:50,mark2:100,mark3:95})
+WriteResult({ "nInserted" : 1 })
+> db.mca1.insert({name:"PQR"})
+WriteResult({ "nInserted" : 1 })
+> db.mca1.find()
+{ "_id" : 1, "name" : "ABC", "Semester" : 4 }
+{ "_id" : 2, "name" : "XYZ" }
+{ "_id" : 3, "mark1" : 50, "mark2" : 100, "mark3" : 95 }
+{ "_id" : ObjectId("5c40eb1155ea195698324ce1"), "name" : "PQR" }
+> db.mca1.find().pretty()
+{ "_id" : 1, "name" : "ABC", "Semester" : 4 }
+{ "_id" : 2, "name" : "XYZ" }
+{ "_id" : 3, "mark1" : 50, "mark2" : 100, "mark3" : 95 }
+{ "_id" : ObjectId("5c40eb1155ea195698324ce1"), "name" : "PQR" }
+> db.mca1.insert({_id:5,name:"saam",},{_id:6,name="raag"},{_id:7,name="srs"})
+2019-01-18T02:26:57.130+0530 E QUERY    [thread1] SyntaxError: missing : after property id @(shell):1:47
+
+> db.mca1.insert({_id:5,name:"saam"},{_id:6,name="raag"},{_id:7,name="srs"})
+2019-01-18T02:27:44.490+0530 E QUERY    [thread1] SyntaxError: missing : after property id @(shell):1:46
+
+> db.mca1.insert({_id:5,name:"saam"},{_id:6,name="raag"},{_id:7,name="srs"})
+2019-01-18T02:28:08.650+0530 E QUERY    [thread1] SyntaxError: missing : after property id @(shell):1:46
+
+> db.mca1.insert([{_id:5,name:"saam"},{_id:6,name="raag"},{_id:7,name="srs"}])
+2019-01-18T02:28:34.921+0530 E QUERY    [thread1] SyntaxError: mi6ssing : after property id @(shell):1:47
+
+> db.mca1.insert([{_id:5,name:"saam"},{_id:6,name:"raag"},{_id:7,name:"srs"}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 3,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.mca1.insert({_id:5,name:"saam"},{_id:6,name:"raag"},{_id:7,name:"srs"})
+WriteResult({
+	"nInserted" : 0,
+	"writeError" : {
+		"code" : 11000,
+		"errmsg" : "E11000 duplicate key error collection: mca.mca1 index: _id_ dup key: { : 5.0 }"
+	}
+})
+> db.mca1.insert([{_id:8,name:"saam"},{_id:6,name:"raag"},{_id:7,name:"srs"}],{ordered:false})
+BulkWriteResult({
+	"writeErrors" : [
+		{
+			"index" : 1,
+			"code" : 11000,
+			"errmsg" : "E11000 duplicate key error collection: mca.mca1 index: _id_ dup key: { : 6.0 }",
+			"op" : {
+				"_id" : 6,
+				"name" : "raag"
+			}
+		},
+		{
+			"index" : 2,
+			"code" : 11000,
+			"errmsg" : "E11000 duplicate key error collection: mca.mca1 index: _id_ dup key: { : 7.0 }",
+			"op" : {
+				"_id" : 7,
+				"name" : "srs"
+			}
+		}
+	],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.mca1.insertOne({_id:9,name:"saam"})
+{ "acknowledged" : true, "insertedId" : 9 }
+> db.mca1.insert([{_id:8,name:"saam"})
+[1]+  Stopped                 mongo
+student@student:~$ mongo
+MongoDB shell version: 3.2.22
+connecting to: test
+Server has startup warnings: 
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] 
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] 
+> db.mca1.insert([{_id:9}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.mca1.insertOne([{_id:11,name:"dfd"},{_id:10,name="kll"}])
+2019-01-18T02:37:33.590+0530 E QUERY    [thread1] SyntaxError: missing : after property id @(shell):1:51
+
+> db.mca1.insertOne([{_id:11,name:"dfd"}])
+2019-01-18T02:37:52.246+0530 E QUERY    [thread1] Error: operation passed in cannot be an Array :
+Bulk/addToOperationsList@src/mongo/shell/bulk_api.js:603:1
+Bulk/this.insert@src/mongo/shell/bulk_api.js:655:20
+DBCollection.prototype.insertOne@src/mongo/shell/crud_api.js:215:5
+@(shell):1:1
+
+> db.mca1.many({_id:12,name="pes"})
+2019-01-18T02:39:02.229+0530 E QUERY    [thread1] SyntaxError: missing : after property id @(shell):1:25
+
+> db.mca1.insertMany({_id:12,name="pes"})
+2019-01-18T02:39:30.037+0530 E QUERY    [thread1] SyntaxError: missing : after property id @(shell):1:31
+
+> db.mca1.insertMany({_id:12,name:"pes"})
+2019-01-18T02:39:47.973+0530 E QUERY    [thread1] TypeError: documents.map is not a function :
+DBCollection.prototype.insertMany@src/mongo/shell/crud_api.js:260:1
+@(shell):1:1
+
+> db.mca.find({},{_id:1})
+> db.mca.find({},{_id:0})
+> db.mca.find({},{_id:0,name:"saam"})
+> db.mca.find({},{_id:0,name:1})
+> db.mca.find({},{name:1})
+> db.mca.find([{},{name:1}])
+Error: error: {
+	"waitedMS" : NumberLong(0),
+	"ok" : 0,
+	"errmsg" : "Failed to parse: filter: [ {}, { name: 1.0 } ]. 'filter' field must be of BSON type Object.",
+	"code" : 9
+}
+> db.mca.find([{},{name:1}])
+Error: error: {
+	"waitedMS" : NumberLong(0),
+	"ok" : 0,
+	"errmsg" : "Failed to parse: filter: [ {}, { name: 1.0 } ]. 'filter' field must be of BSON type Object.",
+	"code" : 9
+}
+> db.mca1.find({},{_id:1,name:1})
+{ "_id" : 9 }
+> db.mca1.find({},{_id:1,name:3})
+{ "_id" : 9 }
+> db.createCollection("product")\
+2019-01-18T02:51:08.360+0530 E QUERY    [thread1] SyntaxError: illegal character @(shell):1:30
+
+> db.createCollection("product")
+{ "ok" : 1 }
+> collection
+2019-01-18T02:51:19.528+0530 E QUERY    [thread1] ReferenceError: collection is not defined :
+@(shell):1:1
+
+> Collection
+2019-01-18T02:51:26.648+0530 E QUERY    [thread1] ReferenceError: Collection is not defined :
+@(shell):1:1
+
+> db
+test
+> db.product.insert([{_id:11,item:"chocolate",desc:"good and tasty
+2019-01-18T02:53:28.480+0530 E QUERY    [thread1] SyntaxError: unterminated string literal @(shell):1:49
+
+> db.product.insert([{_id:11,item:"chocolate",desc:"good and tasty",qty:10,price:50}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.product.insert([{_id:12,item:"ice-cream",desc:" tasty",qty:10,price:100}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.product.insert([{_id:13,item:"kur-kure",desc:"spicy",qty:10,price:40}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.product.insert([{_id:14,item:"jamun",desc:"sweet",qty:20,price:80}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.product.insert([{_id:15,item:"daal",desc:"crunchy",qty:5,price:20}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.product.insert([{_id:16,item:"apple",desc:"Healthy Food",qty:7,price:50}])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+> db.product.insert({qty:{$eq:50}})
+2019-01-18T03:00:20.797+0530 E QUERY    [thread1] Error: field names cannot start with $ [$eq] :
+DBCollection.prototype._validateForStorage@src/mongo/shell/collection.js:252:1
+DBCollection.prototype._validateForStorage@src/mongo/shell/collection.js:256:13
+Bulk/this.insert@src/mongo/shell/bulk_api.js:652:17
+DBCollection.prototype.insert@src/mongo/shell/collection.js:344:13
+@(shell):1:1
+
+> db.product.insert({qty:{$eq:5}})
+2019-01-18T03:00:47.604+0530 E QUERY    [thread1] Error: field names cannot start with $ [$eq] :
+DBCollection.prototype._validateForStorage@src/mongo/shell/collection.js:252:1
+DBCollection.prototype._validateForStorage@src/mongo/shell/collection.js:256:13
+Bulk/this.insert@src/mongo/shell/bulk_api.js:652:17
+DBCollection.prototype.insert@src/mongo/shell/collection.js:344:13
+@(shell):1:1
+
+> db.product.find({qty:{$eq:5}})
+{ "_id" : 15, "item" : "daal", "desc" : "crunchy", "qty" : 5, "price" : 20 }
+> db.product.find({qty:{$eq:50}})
+> db.product.find({qty:{$eq:7}})
+{ "_id" : 16, "item" : "apple", "desc" : "Healthy Food", "qty" : 7, "price" : 50 }
+> db.product.find({qty:{$lt:50}})
+{ "_id" : 11, "item" : "chocolate", "desc" : "good and tasty", "qty" : 10, "price" : 50 }
+{ "_id" : 12, "item" : "ice-cream", "desc" : " tasty", "qty" : 10, "price" : 100 }
+{ "_id" : 13, "item" : "kur-kure", "desc" : "spicy", "qty" : 10, "price" : 40 }
+{ "_id" : 14, "item" : "jamun", "desc" : "sweet", "qty" : 20, "price" : 80 }
+{ "_id" : 15, "item" : "daal", "desc" : "crunchy", "qty" : 5, "price" : 20 }
+{ "_id" : 16, "item" : "apple", "desc" : "Healthy Food", "qty" : 7, "price" : 50 }
+> db.product.find({qty:{$lte:50}})
+{ "_id" : 11, "item" : "chocolate", "desc" : "good and tasty", "qty" : 10, "price" : 50 }
+{ "_id" : 12, "item" : "ice-cream", "desc" : " tasty", "qty" : 10, "price" : 100 }
+{ "_id" : 13, "item" : "kur-kure", "desc" : "spicy", "qty" : 10, "price" : 40 }
+{ "_id" : 14, "item" : "jamun", "desc" : "sweet", "qty" : 20, "price" : 80 }
+{ "_id" : 15, "item" : "daal", "desc" : "crunchy", "qty" : 5, "price" : 20 }
+{ "_id" : 16, "item" : "apple", "desc" : "Healthy Food", "qty" : 7, "price" : 50 }
+> db.product.find({qty:{$gt:50}})
+> db.product.find({qty:{$gt:5}})
+{ "_id" : 11, "item" : "chocolate", "desc" : "good and tasty", "qty" : 10, "price" : 50 }
+{ "_id" : 12, "item" : "ice-cream", "desc" : " tasty", "qty" : 10, "price" : 100 }
+{ "_id" : 13, "item" : "kur-kure", "desc" : "spicy", "qty" : 10, "price" : 40 }
+{ "_id" : 14, "item" : "jamun", "desc" : "sweet", "qty" : 20, "price" : 80 }
+{ "_id" : 16, "item" : "apple", "desc" : "Healthy Food", "qty" : 7, "price" : 50 }
+> db.product.find({qty:{$gte:5}})
+{ "_id" : 11, "item" : "chocolate", "desc" : "good and tasty", "qty" : 10, "price" : 50 }
+{ "_id" : 12, "item" : "ice-cream", "desc" : " tasty", "qty" : 10, "price" : 100 }
+{ "_id" : 13, "item" : "kur-kure", "desc" : "spicy", "qty" : 10, "price" : 40 }
+{ "_id" : 14, "item" : "jamun", "desc" : "sweet", "qty" : 20, "price" : 80 }
+{ "_id" : 15, "item" : "daal", "desc" : "crunchy", "qty" : 5, "price" : 20 }
+{ "_id" : 16, "item" : "apple", "desc" : "Healthy Food", "qty" : 7, "price" : 50 }
+> db.product.find({qty:{$lte:5}})
+{ "_id" : 15, "item" : "daal", "desc" : "crunchy", "qty" : 5, "price" : 20 }
+> db.product.find({qty:{$lt:5}})
+> db.product.find({qty:{$ne:5}})
+{ "_id" : 11, "item" : "chocolate", "desc" : "good and tasty", "qty" : 10, "price" : 50 }
+{ "_id" : 12, "item" : "ice-cream", "desc" : " tasty", "qty" : 10, "price" : 100 }
+{ "_id" : 13, "item" : "kur-kure", "desc" : "spicy", "qty" : 10, "price" : 40 }
+{ "_id" : 14, "item" : "jamun", "desc" : "sweet", "qty" : 20, "price" : 80 }
+{ "_id" : 16, "item" : "apple", "desc" : "Healthy Food", "qty" : 7, "price" : 50 }
+> db.product.find({qty:{$eq:10}})
+{ "_id" : 11, "item" : "chocolate", "desc" : "good and tasty", "qty" : 10, "price" : 50 }
+{ "_id" : 12, "item" : "ice-cream", "desc" : " tasty", "qty" : 10, "price" : 100 }
+{ "_id" : 13, "item" : "kur-kure", "desc" : "spicy", "qty" : 10, "price" : 40 }
+> db.createCollection("student")
+{ "ok" : 1 }
+> db.student.insert({_id:101,name:"abc",sem:4,marks:[50,60,70,80,90]})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({_id:102,name:"xyz",sem:4,marks:[80,90,60,45,32]})
+WriteResult({ "nInserted" : 1 })
+> db.product.insert([{_id:11,item:"chocolate",desc:"good and tasty",qty:10,price:50}])
+[2]+  Stopped                 mongo
+student@student:~$ mongo
+MongoDB shell version: 3.2.22
+connecting to: test
+Server has startup warnings: 
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] 
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2019-01-18T01:34:48.013+0530 I CONTROL  [initandlisten] 
+> db.createCollection("student")
+{ "ok" : 0, "errmsg" : "collection already exists", "code" : 48 }
+> db.student.insert({_id:101,name:"abc",sem:4,marks:[50,60,70,80,90]})
+WriteResult({
+	"nInserted" : 0,
+	"writeError" : {
+		"code" : 11000,
+		"errmsg" : "E11000 duplicate key error collection: test.student index: _id_ dup key: { : 101.0 }"
+	}
+})
+> db.student.insert({_id:103,name:"srs",sem:4,marks:[80,56,44,34,90]})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({_id:104,name:"pqr",sem:4,marks:[88,77,66,70,,90]})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({_id:105,name:"erc",sem:4,marks:[70,56,70,80,90]})
+WriteResult({ "nInserted" : 1 })
+> db.student.find({marks:{$in:[70]}})
+{ "_id" : 101, "name" : "abc", "sem" : 4, "marks" : [ 50, 60, 70, 80, 90 ] }
+{ "_id" : 104, "name" : "pqr", "sem" : 4, "marks" : [ 88, 77, 66, 70, undefined, 90 ] }
+{ "_id" : 105, "name" : "erc", "sem" : 4, "marks" : [ 70, 56, 70, 80, 90 ] }
+> db.student.find({marks:{$nin:[70]}})
+{ "_id" : 102, "name" : "xyz", "sem" : 4, "marks" : [ 80, 90, 60, 45, 32 ] }
+{ "_id" : 103, "name" : "srs", "sem" : 4, "marks" : [ 80, 56, 44, 34, 90 ] }
+> db.student.find({marks:{$nin:70}})
+Error: error: {
+	"waitedMS" : NumberLong(0),
+	"ok" : 0,
+	"errmsg" : "$nin needs an array",
+	"code" : 2
+}
+> db.student.find({marks:{$in:[70,60]}})
+{ "_id" : 101, "name" : "abc", "sem" : 4, "marks" : [ 50, 60, 70, 80, 90 ] }
+{ "_id" : 102, "name" : "xyz", "sem" : 4, "marks" : [ 80, 90, 60, 45, 32 ] }
+{ "_id" : 104, "name" : "pqr", "sem" : 4, "marks" : [ 88, 77, 66, 70, undefined, 90 ] }
+{ "_id" : 105, "name" : "erc", "sem" : 4, "marks" : [ 70, 56, 70, 80, 90 ] }
+> db.student.find({marks:{$in:[70,90]}})
+{ "_id" : 101, "name" : "abc", "sem" : 4, "marks" : [ 50, 60, 70, 80, 90 ] }
+{ "_id" : 102, "name" : "xyz", "sem" : 4, "marks" : [ 80, 90, 60, 45, 32 ] }
+{ "_id" : 103, "name" : "srs", "sem" : 4, "marks" : [ 80, 56, 44, 34, 90 ] }
+{ "_id" : 104, "name" : "pqr", "sem" : 4, "marks" : [ 88, 77, 66, 70, undefined, 90 ] }
+{ "_id" : 105, "name" : "erc", "sem" : 4, "marks" : [ 70, 56, 70, 80, 90 ] }
+> db.student.find({marks:{$in:[70]}})
+{ "_id" : 101, "name" : "abc", "sem" : 4, "marks" : [ 50, 60, 70, 80, 90 ] }
+{ "_id" : 104, "name" : "pqr", "sem" : 4, "marks" : [ 88, 77, 66, 70, undefined, 90 ] }
+{ "_id" : 105, "name" : "erc", "sem" : 4, "marks" : [ 70, 56, 70, 80, 90 ] }
+> 

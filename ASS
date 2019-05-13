@@ -1,0 +1,17 @@
+> db.insurence.insertMany([{emp_id:1,insurence_id:11,insurence_type:"health
+insurence",amount_premium:10000},{emp_id:9,insurence_id:10,insurence_type:"health
+insurence",amount_premium:10000}])
+
+db.dependents.find({age:{$lt:25}})
+{ "_id" : ObjectId("5c51220f91d5b6dba2e444cf"), "emp_id" : 2, "dep_id" : 102, "no_of_dependents" : 2, "age"
+: 20 }
+> db.education.insert({emp_id:2,children_id:10001,education_institute:"manglore university",fees:100000})
+WriteResult({ "nInserted" : 1 })
+> db.education.find().pretty()
+{
+"_id" : ObjectId("5c51274791d5b6dba2e444d8"),
+"emp_id" : 2,
+"children_id" : 10001,
+"education_institute" : "manglore university",
+"fees" : 100000
+}

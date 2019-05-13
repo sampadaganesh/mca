@@ -1,0 +1,278 @@
+17/1/2019
+> use dbmca
+switched to db dbmca
+>db.createCollection("MCA",{capped:true,size:5242880,max:5000})
+{ "ok" : 1 }
+
+> db.MCA.drop()
+true
+
+
+> db.MCA.insert({_id:1,name:"kiran",sem:4})
+WriteResult({ "nInserted" : 1 })
+> db.MCA.insert({_id:2,name:"chandra"})
+WriteResult({ "nInserted" : 1 })
+> db.MCA.insert({_id:3,mark1:80,mark2:68,mark3:95})
+WriteResult({ "nInserted" : 1 })
+> db.MCA.insert({name:"abhi",mark1:80,mark2:78,mark3:93})
+WriteResult({ "nInserted" : 1 })
+> db.MCA.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 4 }-
+{ "_id" : 2, "name" : "chandra" }
+{ "_id" : 3, "mark1" : 80, "mark2" : 68, "mark3" : 95 }
+{ "_id" : ObjectId("5c404269cb3ccc879952ab8e"), "name" : "abhi", "mark1" : 80, "mark2" : 78, "mark3" : 93 }
+> db.MCA.find().pretty()
+{ "_id" : 1, "name" : "kiran", "sem" : 4 }
+{ "_id" : 2, "name" : "chandra" }
+{ "_id" : 3, "mark1" : 80, "mark2" : 68, "mark3" : 95 }
+{
+        "_id" : ObjectId("5c404269cb3ccc879952ab8e"),
+        "name" : "abhi",
+        "mark1" : 80,
+        "mark2" : 78,
+        "mark3" : 93
+}
+>> db.MCA.insert({_id:4,name:"aaa"},{_id:5,name:"hola"},{_id:6,name:"momo"})
+WriteResult({ "nInserted" : 1 })
+> db.MCA.insert([{_id:7,name:"aaa"},{_id:8,name:"hola"},{_id:9,name:"momo"}])
+BulkWriteResult({
+        "writeErrors" : [ ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 3,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+
+> db.MCA.insert([{_id:10,name:"aaa"},{_id:8,name:"hola"},{_id:11,name:"momo"}],{ordered:false})
+BulkWriteResult({
+        "writeErrors" : [
+                {
+                        "index" : 1,
+                        "code" : 11000,
+                        "errmsg" : "E11000 duplicate key error collection: dbmca.MCA index: _id_ dup key: { : 8.0 }",
+                        "op" : {
+                                "_id" : 8,
+                                "name" : "hola"
+                        }
+                }
+        ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 2,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+
+> db.MCA.insertOne({_id:12,name:"aaa"})
+{ "acknowledged" : true, "insertedId" : 12 }
+> db.MCA.insertMany([{_id:13,name:"aaa"},{_id:14,name:"hola"},{_id:15,name:"momo"}])
+{ "acknowledged" : true, "insertedIds" : [ 13, 14, 15 ] }
+
+> db.MCA.save({_id:16,name:"jij"})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 16 })
+> db.MCA.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 4 }
+{ "_id" : 2, "name" : "chandra" }
+{ "_id" : 3, "mark1" : 80, "mark2" : 68, "mark3" : 95 }
+{ "_id" : ObjectId("5c404269cb3ccc879952ab8e"), "name" : "abhi", "mark1" : 80, "mark2" : 78, "mark3" : 93 }
+{ "_id" : 4, "name" : "aaa" }
+{ "_id" : 7, "name" : "aaa" }
+{ "_id" : 8, "name" : "hola" }
+{ "_id" : 9, "name" : "momo" }
+{ "_id" : 10, "name" : "aaa" }
+{ "_id" : 11, "name" : "momo" }
+{ "_id" : 12, "name" : "aaa" }
+{ "_id" : 13, "name" : "aaa" }
+{ "_id" : 14, "name" : "hola" }
+{ "_id" : 15, "name" : "momo" }
+{ "_id" : 16, "name" : "jij" }
+
+> db.MCA.find({},{_id:1})
+{ "_id" : 1 }
+{ "_id" : 2 }
+{ "_id" : 3 }
+{ "_id" : ObjectId("5c404269cb3ccc879952ab8e") }
+{ "_id" : 4 }
+{ "_id" : 7 }
+{ "_id" : 8 }
+{ "_id" : 9 }
+{ "_id" : 10 }
+{ "_id" : 11 }
+{ "_id" : 12 }
+{ "_id" : 13 }
+{ "_id" : 14 }
+{ "_id" : 15 }
+{ "_id" : 16 }
+
+> db.MCA.find({},{_id:0})
+{ "name" : "kiran", "sem" : 4 }
+{ "name" : "chandra" }
+{ "mark1" : 80, "mark2" : 68, "mark3" : 95 }
+{ "name" : "abhi", "mark1" : 80, "mark2" : 78, "mark3" : 93 }
+{ "name" : "aaa" }
+{ "name" : "aaa" }
+{ "name" : "hola" }
+{ "name" : "momo" }
+{ "name" : "aaa" }
+{ "name" : "momo" }
+{ "name" : "aaa" }
+{ "name" : "aaa" }
+{ "name" : "hola" }
+{ "name" : "momo" }
+{ "name" : "jij" }
+
+
+> db.MCA.find({},{_id:1,name:"kiran"})
+{ "_id" : 1, "name" : "kiran" }
+{ "_id" : 2, "name" : "chandra" }
+{ "_id" : 3 }
+{ "_id" : ObjectId("5c404269cb3ccc879952ab8e"), "name" : "abhi" }
+{ "_id" : 4, "name" : "aaa" }
+{ "_id" : 7, "name" : "aaa" }
+{ "_id" : 8, "name" : "hola" }
+{ "_id" : 9, "name" : "momo" }
+{ "_id" : 10, "name" : "aaa" }
+{ "_id" : 11, "name" : "momo" }
+{ "_id" : 12, "name" : "aaa" }
+{ "_id" : 13, "name" : "aaa" }
+{ "_id" : 14, "name" : "hola" }
+{ "_id" : 15, "name" : "momo" }
+{ "_id" : 16, "name" : "jij" }
+
+
+> db.MCA.find({},{_id:0,name:1})
+{ "name" : "kiran" }
+{ "name" : "chandra" }
+{  }
+{ "name" : "abhi" }
+{ "name" : "aaa" }
+{ "name" : "aaa" }
+{ "name" : "hola" }
+{ "name" : "momo" }
+{ "name" : "aaa" }
+{ "name" : "momo" }
+{ "name" : "aaa" }
+{ "name" : "aaa" }
+{ "name" : "hola" }
+{ "name" : "momo" }
+{ "name" : "jij" }
+
+
+> db.MCA.find({},{_id:-5})
+{ "_id" : 1 }
+{ "_id" : 2 }
+{ "_id" : 3 }
+{ "_id" : ObjectId("5c404269cb3ccc879952ab8e") }
+{ "_id" : 4 }
+{ "_id" : 7 }
+{ "_id" : 8 }
+{ "_id" : 9 }
+{ "_id" : 10 }
+{ "_id" : 11 }
+{ "_id" : 12 }
+{ "_id" : 13 }
+{ "_id" : 14 }
+{ "_id" : 15 }
+{ "_id" : 16 }
+
+query part
+create product collection with 10 doc
+> db.product.insert({_id:1,item:"RAM",descr:"computer",qty:36,price:4500})
+> db.createCollection("product")
+{
+        "ok" : 0,
+        "errmsg" : "a collection 'dbmca.product' already exists",
+        "code" : 48,
+        "codeName" : "NamespaceExists"
+}
+> db.product.insert({_id:1,item:"RAM",descr:"computer",qty:36,price:4500})
+> db.product.insert({_id:2,item:"ROM",descr:"computer",qty:16,price:3100})
+> db.product.insert({_id:3,item:"mouse",descr:"computer",qty:26,price:600})
+> db.product.find()
+{ "_id" : 1, "item" : "RAM", "descr" : "computer", "qty" : 36, "price" : 4500 }
+{ "_id" : 2, "item" : "ROM", "descr" : "computer", "qty" : 16, "price" : 3100 }
+{ "_id" : 3, "item" : "mouse", "descr" : "computer", "qty" : 26, "price" : 600 }
+> db.product.insert({_id:4,item:"keyboard",descr:"computer",qty:20,price:900})
+> db.product.insert({_id:5,item:"camera",descr:"photography",qty:27,price:30900})
+> db.product.insert({_id:7,item:"pendrive",descr:"memory",qty:57,price:940})
+> db.product.insert({_id:8,item:"precessor",descr:"intel",qty:17,price:14440})
+> db.product.insert({_id:9,item:"computer",descr:"system",qty:87,price:35440})
+> db.product.insert({_id:10,item:"cd",descr:"memory",qty:34,price:40})
+
+> db.product.find({qty:{$eq:57}})
+{ "_id" : 7, "item" : "pendrive", "descr" : "memory", "qty" : 57, "price" : 940 }
+ 
+
+> db.product.find({qty:{$lt:50}})
+{ "_id" : 1, "item" : "RAM", "descr" : "computer", "qty" : 36, "price" : 4500 }
+{ "_id" : 2, "item" : "ROM", "descr" : "computer", "qty" : 16, "price" : 3100 }
+{ "_id" : 3, "item" : "mouse", "descr" : "computer", "qty" : 26, "price" : 600 }
+{ "_id" : 4, "item" : "keyboard", "descr" : "computer", "qty" : 20, "price" : 900 }
+{ "_id" : 5, "item" : "camera", "descr" : "photography", "qty" : 27, "price" : 30900 }
+{ "_id" : 8, "item" : "precessor", "descr" : "intel", "qty" : 17, "price" : 14440 }
+{ "_id" : 10, "item" : "cd", "descr" : "memory", "qty" : 34, "price" : 40 }
+
+
+> db.product.find({qty:{$lte:27}})
+{ "_id" : 2, "item" : "ROM", "descr" : "computer", "qty" : 16, "price" : 3100 }
+{ "_id" : 3, "item" : "mouse", "descr" : "computer", "qty" : 26, "price" : 600 }
+{ "_id" : 4, "item" : "keyboard", "descr" : "computer", "qty" : 20, "price" : 900 }
+{ "_id" : 5, "item" : "camera", "descr" : "photography", "qty" : 27, "price" : 30900 }
+{ "_id" : 8, "item" : "precessor", "descr" : "intel", "qty" : 17, "price" : 14440 }
+> db.product.find({qty:{$gt:50}})
+{ "_id" : 7, "item" : "pendrive", "descr" : "memory", "qty" : 57, "price" : 940 }
+{ "_id" : 9, "item" : "computer", "descr" : "system", "qty" : 87, "price" : 35440 }
+
+> db.product.find({qty:{$gte:34}})
+{ "_id" : 1, "item" : "RAM", "descr" : "computer", "qty" : 36, "price" : 4500 }
+{ "_id" : 7, "item" : "pendrive", "descr" : "memory", "qty" : 57, "price" : 940 }
+{ "_id" : 9, "item" : "computer", "descr" : "system", "qty" : 87, "price" : 35440 }
+{ "_id" : 10, "item" : "cd", "descr" : "memory", "qty" : 34, "price" : 40 }
+
+> db.product.find({qty:{$ne:34}})
+{ "_id" : 1, "item" : "RAM", "descr" : "computer", "qty" : 36, "price" : 4500 }
+{ "_id" : 2, "item" : "ROM", "descr" : "computer", "qty" : 16, "price" : 3100 }
+{ "_id" : 3, "item" : "mouse", "descr" : "computer", "qty" : 26, "price" : 600 }
+{ "_id" : 4, "item" : "keyboard", "descr" : "computer", "qty" : 20, "price" : 900 }
+{ "_id" : 5, "item" : "camera", "descr" : "photography", "qty" : 27, "price" : 30900 }
+{ "_id" : 7, "item" : "pendrive", "descr" : "memory", "qty" : 57, "price" : 940 }
+{ "_id" : 8, "item" : "precessor", "descr" : "intel", "qty" : 17, "price" : 14440 }
+{ "_id" : 9, "item" : "computer", "descr" : "system", "qty" : 87, "price" : 35440 }
+
+
+> db.createCollection("student")
+{ "ok" : 1 }
+> db.student.insert({_id:1,name:"kiran",sem:4,marks:[70,65,78,95,44]})
+> db.student.insert({_id:2,name:"abhi",sem:4,marks:[80,75,88,75,64]})
+> db.student.insert({_id:3,name:"chandra",sem:4,marks:[80,65,88,95,84]})
+> db.student.insert({_id:4,name:"ramo",sem:4,marks:[90,95,98,95,94]})
+> db.student.insert({_id:5,name:"swathi",sem:4,marks:[99,99,99,99,99]})
+> db.student.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "marks" : [ 70, 65, 78, 95, 44 ] }
+{ "_id" : 2, "name" : "abhi", "sem" : 4, "marks" : [ 80, 75, 88, 75, 64 ] }
+{ "_id" : 3, "name" : "chandra", "sem" : 4, "marks" : [ 80, 65, 88, 95, 84 ] }
+{ "_id" : 4, "name" : "ramo", "sem" : 4, "marks" : [ 90, 95, 98, 95, 94 ] }
+{ "_id" : 5, "name" : "swathi", "sem" : 4, "marks" : [ 99, 99, 99, 99, 99 ] }
+
+
+> db.student.find({marks:{$in:[70]}})
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "marks" : [ 70, 65, 78, 95, 44 ] }
+
+> db.student.find({marks:{$in:[70,80]}})
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "marks" : [ 70, 65, 78, 95, 44 ] }
+{ "_id" : 2, "name" : "abhi", "sem" : 4, "marks" : [ 80, 75, 88, 75, 64 ] }
+{ "_id" : 3, "name" : "chandra", "sem" : 4, "marks" : [ 80, 65, 88, 95, 84 ] }
+
+
+
+
+
+
+
+
+

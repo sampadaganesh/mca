@@ -1,0 +1,119 @@
+REPL IN MULTIPLE MACHINE
+sudo chmod -R 777 /etc/hosts
+sudo chmod -R 777 /etc/hostname
+nano /etc/hosts
+nano /etc/hostname
+
+restart
+
+mkdir -p/var/lib/mongodb/host0
+mkdir -p/var/lib/mongodb/host1
+mkdir -p/var/lib/mongodb/host2
+
+Terminal1 in host0
+mongod --port 27040 --dbpath /var/lib/mongodb/host0 --replSet test --smallfiles --oplogSize 128
+
+Terminal1 in host1
+mongod --port 27041 --dbpath /var/lib/mongodb/host1 --replSet test --smallfiles --oplogSize 128
+
+Terminal1 in host2
+mongod --port 27042 --dbpath /var/lib/mongodb/host2 --replSet test --smallfiles --oplogSize 128
+
+
+Terminal2 in Host0
+mongo --port 27020
+rs.initiate()
+rs.add("host1:27041")
+rs.add("host2:27042")
+
+
+Terminal2 in Host1
+mongo --port 27021
+db.getMongo().setSlaveOk()
+
+
+Terminal2 in Host2
+mongo --port 2702
+db.getMongo().setSlaveOk()
+
+cfg=rs.cof()
+cfg.memners[2].priority()
+rs.reconfig[cfg]
+cfg.memners[2].hidden=true
+
+cfg.memners[2].slaveDelay=true
+--------------------------------------------------------------------------------------------------------------
+
+
+repl single machine
+Terminal 1:
+sudo chmod -R 777 /srv
+
+mkdir -p /srv/mongodb/test0
+mkdir -p /srv/mongodb/test1
+mkdir -p /srv/mongodb/test2
+
+27017 default port number
+
+Terminal1
+mongod --port 27040 --dbpath /srv/mongodb/test0 --replSet test --smallfiles --oplogSize 128
+
+Terminal2
+mongod --port 27041 --dbpath /srv/mongodb/test1 --replSet test --smallfiles --oplogSize 128
+
+Terminal3
+mongod --port 27040 --dbpath /srv/mongodb/test2 --replSet test --smallfiles --oplogSize 128
+
+Terminal4
+mongo --port 27040
+
+
+Terminal5
+mongo --port 27041
+
+
+Terminal6
+mongo --port 27042
+
+Terminal4:
+rs.initiate("test")
+rs.add("Student-mca:27041")//rs.add("hostname:portnumber")
+rs.add("Student-mca:27042")
+
+Terminal5:
+db.getMongo().setSlaveOk()
+
+Terminal6:
+db.getMongo().setSlaveOk()
+
+use admin
+db.shutdownServer()
+
+Terminal4:
+mongo --port 27040
+rs.initiate("test")
+test:SECONDARY>rs.add("Student-mca:27041")
+test:PRIMARY>rs.add("student-mca:27042")
+use mca
+db.createCollection("user")
+db.user.insert({_id:1,name:"bhavya"})
+db.user.deleteOne({_id:1})
+
+use admin
+db.shutdownServer()
+
+Terminal5:
+mongo --port 27041
+db.getMongo.setSlaveOk()
+use mca
+db.use.find()
+use admin
+db.shutdownServer()
+
+Terminal6:
+mongo --port 27042
+db.getMongo.setSlaveOk()
+use mca
+db.use.find()
+use admin
+db.shutdownServer()

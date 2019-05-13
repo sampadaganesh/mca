@@ -1,0 +1,63 @@
+1)
+2)in entire collection replace mark 60 to 50
+
+> db.semfour.find()
+{ "_id" : 1, "name" : "kiran", "age" : 21, "city" : "bangalore", "marks" : [ 90, 99, 90 ] }
+{ "_id" : 2, "name" : "chandra", "age" : 21, "city" : "bangalore2", "marks" : [ 98, 89, 100 ] }
+{ "_id" : 3, "name" : "abhi", "age" : 21, "city" : "bangalore3", "marks" : [ 90, 79, 99 ] }
+
+
+> db.semfour.update({_id:1,marks:99},{$set:{"marks":100}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.semfour.find()
+{ "_id" : 1, "name" : "kiran", "age" : 21, "city" : "bangalore", "marks" : 100 }
+{ "_id" : 2, "name" : "chandra", "age" : 21, "city" : "bangalore2", "marks" : [ 98, 89, 100 ] }
+{ "_id" : 3, "name" : "abhi", "age" : 21, "city" : "bangalore3", "marks" : [ 90, 79, 99 ] }
+> db.semfour.update({_id:1,marks:100},{$set:{"marks":[100,87,90]}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.semfour.find()
+{ "_id" : 1, "name" : "kiran", "age" : 21, "city" : "bangalore", "marks" : [ 100, 87, 90 ] }
+{ "_id" : 2, "name" : "chandra", "age" : 21, "city" : "bangalore2", "marks" : [ 98, 89, 100 ] }
+{ "_id" : 3, "name" : "abhi", "age" : 21, "city" : "bangalore3", "marks" : [ 90, 79, 99 ] }
+
+
+> db.semfour.update({_id:1,marks:90},{$set:{"marks.$":105}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.semfour.find()
+{ "_id" : 1, "name" : "kiran", "age" : 21, "city" : "bangalore", "marks" : [ 100, 87, 105 ] }
+{ "_id" : 2, "name" : "chandra", "age" : 21, "city" : "bangalore2", "marks" : [ 98, 89, 100 ] }
+{ "_id" : 3, "name" : "abhi", "age" : 21, "city" : "bangalore3", "marks" : [ 90, 79, 99 ] }
+
+
+
+> db.semfour.find()
+{ "_id" : 1, "name" : "kiran", "age" : 21, "city" : "bangalore", "marks" : [ 100, 87, 105 ] }
+{ "_id" : 2, "name" : "chandra", "age" : 21, "city" : "bangalore2", "marks" : [ 108, 99, 115 ] }
+{ "_id" : 3, "name" : "abhi", "age" : 21, "city" : "bangalore3", "marks" : [ 90, 79, 99 ] }
+
+every mark inc 10
+> db.semfour.update({},{$inc:{"marks.$[]":10}},{multi:true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.semfour.find()
+{ "_id" : 1, "name" : "kiran", "age" : 21, "city" : "bangalore", "marks" : [ 110, 97, 115 ] }
+{ "_id" : 2, "name" : "chandra", "age" : 21, "city" : "bangalore2", "marks" : [ 118, 109, 125 ] }
+{ "_id" : 3, "name" : "abhi", "age" : 21, "city" : "bangalore3", "marks" : [ 100, 89, 109 ] }
+
+if the marks of any student in less than 50 set it as 55
+> db.semfour.update({},
+{$set:
+{"marks.$[element]":55}},
+{multi:true,arrayFilters:
+[{"element":
+{$gt:100}
+}
+]
+}
+)
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.semfour.find()
+{ "_id" : 1, "name" : "kiran", "age" : 21, "city" : "bangalore", "marks" : [ 55, 55, 55 ] }
+{ "_id" : 2, "name" : "chandra", "age" : 21, "city" : "bangalore2", "marks" : [ 55, 55, 55 ] }
+{ "_id" : 3, "name" : "abhi", "age" : 21, "city" : "bangalore3", "marks" : [ 100, 55, 55 ] }
+
+

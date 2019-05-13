@@ -1,0 +1,75 @@
+db
+show dbs
+use pes
+db.createCollecton('student')
+db.student.insert({_id:111,name:'sampada',marks:[98,99,97,66]})
+db.student.find()
+db.student.remove({'name':"sampada"})
+db.student.update( {_id:112}, {$push:{marks:66}} )
+db.student.update( {_id:112}, {$push:{marks:{$each:[88,99,66]}}} )
+db.student.update({_id:112},{$pull:{marks:{$lte:80}}})
+db.student.update({_id:112},{$pullAll:{marks:[88,99]}})
+
+db.student.update({_id:112},{$push:{marks:{$each:[90,88,99],$slice:-5}}})
+
+ db.student.update({_id:112},{$push:{marks:{$each:[90,99],$position:-2}}})
+
+ db.student.update({_id:112},{$push:{marks:{$each:[90,99],$position:3}}})
+
+ db.student.update({_id:112},{$push:{marks:{$each:[90,99],$position:0}}})
+
+ db.student.update({_id:112},{$push:{marks:{$each:[90,88,99],$sort:1}}})
+
+ db.student.update({_id:112},{$push:{marks:{$each:[90,88,99],$sort:-1}}})
+
+ db.student.remove({marks:{$gt:95}})
+
+ db.student.deleteOne({_id:1})
+ db.student.deleteMany({tags:"camera"})
+
+ db.student.findOneAndDelete({"name":"saam"})
+
+ db.students.findAndmodify({query:{_id:1},update:{$inc:{points:1}},upsert:true})
+ d1={_id:1,name:"saam",city:"bangalore",age:18,marks:[90,90,90]}
+ db.students.insert(d1)
+db.students.aggregate([
+					{$match:{status:"A"}},
+					{$group:{_id:"$cust_id",total:{$sum:"$amount"}}},
+					{$sort:{total:-1}}
+					])
+
+db.students.aggregate(
+[{$match:{author:"dave"}}]);
+db.student.aggregate( [{$match:{name:"raghu"}}]);
+
+
+ db.student.aggregate([ {$match:{$or:[{marks:{$gt:60,$lt:90}},{marks:{$gte:10}}]}}, {$group:{_id:null,count:{$sum:1}}}]);
+{ "_id" : null, "count" : 3 }
+
+db.student.aggregate([ {$group:{_id:{month:{$month:"$date"},
+			{day:{$dayOfMonth:"$date"},{year:{$year:"$date"}},
+			totalprice:{$sum:{$multiply:["$price","$quantity"]}},
+			averagequantity:{$avg:"$quantity"},count:{$sum:1}}}])
+
+db.student.count({ord_date:{$gt:newdate('01/11/2013')}})
+
+db.students.aggregate([{$project:{"stop.title":1}}])
+
+db.students.aggregate([{$project:{stop:{title:1}}}])
+
+db.students.aggregate([{$project:{stop:{title:1}}}])
+db.marks.aggregate({$project:{_id:0,"total quiz":{$sum:"$Quiz"},"total Assignment":{$sum:"$Assignment"}}})
+> db.student.find({marks:{$in:[70,80]}})
+> db.details.update( {_id:2}, {$inc:{sem:-1}})
+db.details.update({_id:3},{$set:{sem:111},$setOnInsert:{name:"zzz"}},{upsert:true})
+ db.semfour.update({},{$inc:{"marks.$[]":10}},{multi:true})
+ db.semfour.update({},
+{$set:
+{"marks.$[element]":55}},
+{multi:true,arrayFilters:
+[{"element":
+{$gt:100}
+}
+]
+}
+)

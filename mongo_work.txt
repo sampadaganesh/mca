@@ -1,0 +1,761 @@
+> db.marks.find()
+{ "_id" : 121, "ISA" : 40, "ESA" : 56, "Assignment" : [ 45, 78, 12 ], "Quiz" : [ 12, 5, 7, 8 ] }
+{ "_id" : 122, "ISA" : 30, "ESA" : 86, "Assignment" : [ 10, 10, 12, 10 ], "Quiz" : [ 10, 10, 17, 18 ] }
+{ "_id" : 123, "ISA" : 40, "ESA" : 96, "Assignment" : [ 20, 20, 29, 20 ], "Quiz" : [ 9, 8, 7, 8 ] }
+{ "_id" : 124, "ISA" : 40, "ESA" : 46, "Assignment" : [ 10, 10, 9, 20 ], "Quiz" : [ 9, 8, 7, 8 ] }
+> db.marks.aggregate({$project:{_id:0,"total":{$max:quiz}}})
+2019-03-05T08:31:32.151+0530 E QUERY    [js] ReferenceError: quiz is not defined :
+@(shell):1:46
+> db.marks.aggregate({$project:{_id:0,"total":{$max:[quiz]}}})
+2019-03-05T08:31:50.866+0530 E QUERY    [js] ReferenceError: quiz is not defined :
+@(shell):1:52
+> db.marks.aggregate({$project:{_id:0,"total":{$max:Quiz}}})
+2019-03-05T08:32:09.880+0530 E QUERY    [js] ReferenceError: Quiz is not defined :
+@(shell):1:46
+> db.marks.aggregate({$project:{_id:0,"total":{$max:"$Quiz"}}})
+{ "total" : 12 }
+{ "total" : 18 }
+{ "total" : 9 }
+{ "total" : 9 }
+> db.marks.aggregate({$project:{_id:0,"Quiz":{$max:"$Quiz"}}})
+{ "Quiz" : 12 }
+{ "Quiz" : 18 }
+{ "Quiz" : 9 }
+{ "Quiz" : 9 }
+> db.marks.aggregate({$project:{_id:0,"Quiz_maximum_mark":{$max:"$Quiz"}}})
+{ "Quiz_maximum_mark" : 12 }
+{ "Quiz_maximum_mark" : 18 }
+{ "Quiz_maximum_mark" : 9 }
+{ "Quiz_maximum_mark" : 9 }
+> db.marks.aggregate({$project:{_id:0,"Quiz_maximum_mark":{$max:"$Quiz"},"Assignment_max_marks":{$max:"$Assignment}}})
+2019-03-05T08:34:33.853+0530 E QUERY    [js] SyntaxError: unterminated string literal @(shell):1:100
+> db.marks.aggregate({$project:{_id:0,"Quiz_maximum_mark":{$max:["$Quiz","Assignment_max_marks:"$Assignment]}})
+...
+...
+> db.marks.aggregate({$project:{_id:0,"Quiz_maximum_mark":{$max:"$Assignment"}}})
+{ "Quiz_maximum_mark" : 78 }
+{ "Quiz_maximum_mark" : 12 }
+{ "Quiz_maximum_mark" : 29 }
+{ "Quiz_maximum_mark" : 20 }
+> db.marks.aggregate([{$project:{Quizmax:{$max:"$Quiz"},"Assignment_max_marks:{$max:"$Assignment},examMax:{$max:["$ISA","ESA"]}}])
+2019-03-05T08:41:29.084+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):1:83
+> db.marks.aggregate([{$project:{Quizmax:{$max:"$Quiz"},"Assignment_max_marks:{$max:"$Assignment},examMax:{$max:["$ISA","ESA"]}}}])
+2019-03-05T08:42:02.518+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):1:83
+> db.marks.aggregate({$project:{Quizmax:{$max:"$Quiz"},"Assignment_max_marks:{$max:"$Assignment},examMax:{$max:["$ISA","$ESA"]}}})
+2019-03-05T08:43:01.057+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):1:82
+> db.marks.aggregate({$project:{Quizmax:{$max:"$Quiz"},"Assignment_max_marks":{$max:"$Assignment"},examMax:{$max:["$ISA","$ESA"]}}})
+{ "_id" : 121, "Quizmax" : 12, "Assignment_max_marks" : 78, "examMax" : 56 }
+{ "_id" : 122, "Quizmax" : 18, "Assignment_max_marks" : 12, "examMax" : 86 }
+{ "_id" : 123, "Quizmax" : 9, "Assignment_max_marks" : 29, "examMax" : 96 }
+{ "_id" : 124, "Quizmax" : 9, "Assignment_max_marks" : 20, "examMax" : 46 }
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+> db.marks.aggregate({$project:{Quizmax:{$max:"$Quiz"},"Assignment_max_marks":{$max:"$Assignm
+2019-03-05T08:54:20.582+0530 E QUERY    [js] SyntaxError: unterminated string literal @(shell):1:82
+>
+> db.sales.aggregate(
+... [
+... {
+... $group:
+... {
+... id:"$item",
+... maxTotalAmount:{$max:{$multiply:["$price","$quantity"]}},
+... maxQuantity:{$max:"$quantity"}
+... }
+... }
+... ]
+...            )
+2019-03-05T08:54:24.803+0530 E QUERY    [js] Error: command failed: {
+        "ok" : 0,
+        "errmsg" : "The field 'id' must be an accumulator object",
+        "code" : 40234,
+        "codeName" : "Location40234"
+} : aggregate failed :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+doassert@src/mongo/shell/assert.js:18:14
+_assertCommandWorked@src/mongo/shell/assert.js:534:17
+assert.commandWorked@src/mongo/shell/assert.js:618:16
+DB.prototype._runAggregate@src/mongo/shell/db.js:260:9
+DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1062:12
+@(shell):1:1
+> db.sales.aggregate(
+... [
+... {
+... $group:
+... {
+... id:"$item",
+... maxTotalAmount:{$max:{$multiply:["$price","$quantity"]}},
+... maxQuantity:{$max:"$quantity"}
+... }
+... }
+... ]
+... db.sales.aggregate( [ { $group: {_id:"$item", maxTotalAmount:{$max:{$multiply:["$price","$quantity"]}}, maxQuantity:{$max:"$quantity"} } } ]            )
+...
+...
+> db.sales.aggregate( [ { $group: { id:"$item", maxTotalAmount:{$max:{$multiply:["$price","$quantity"]}}, maxQuantity:{$max:"$quantity"} } } ]            )
+2019-03-05T08:55:28.833+0530 E QUERY    [js] Error: command failed: {
+        "ok" : 0,
+        "errmsg" : "The field 'id' must be an accumulator object",
+        "code" : 40234,
+        "codeName" : "Location40234"
+} : aggregate failed :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+doassert@src/mongo/shell/assert.js:18:14
+_assertCommandWorked@src/mongo/shell/assert.js:534:17
+assert.commandWorked@src/mongo/shell/assert.js:618:16
+DB.prototype._runAggregate@src/mongo/shell/db.js:260:9
+DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1062:12
+@(shell):1:1
+>
+> db.sales.aggregate(
+... [
+... {
+... $group:
+... {
+... _id:"$item",
+... maxTotalAmount:{$max:{$multiply:["$price","$quantity"]}},
+... maxQuantity:{$max:"$quantity"}
+... }
+... }
+... ]
+...            )
+{ "_id" : "mobile", "maxTotalAmount" : 84000, "maxQuantity" : 7 }
+{ "_id" : "pens", "maxTotalAmount" : 480, "maxQuantity" : 12 }
+{ "_id" : "abc", "maxTotalAmount" : 5000, "maxQuantity" : 5 }
+{ "_id" : "chocolate", "maxTotalAmount" : 42000, "maxQuantity" : 21 }
+{ "_id" : "srs", "maxTotalAmount" : 40000, "maxQuantity" : 10 }
+{ "_id" : "Bags", "maxTotalAmount" : 5200, "maxQuantity" : 13 }
+{ "_id" : "wallet", "maxTotalAmount" : 55000, "maxQuantity" : 22 }
+> db.sales.aggregate(
+... [
+... {
+... $group:
+... {
+... _id:"$item",
+... maxTotalAmount:{$max:{$multiply:["$price","$quantity"]}},
+... maxQuantity:{$max:"$quantity"}
+... }
+... }
+... ]
+... db.sales.aggregate( [ { $group: { id:"$item", minTotalAmount:{$min:{$multiply:["$price","$quantity"]}}, minQuantity:{$min:"$quantity"} } } ]            )
+...
+...
+>
+>
+> db.sales.aggregate(
+... [
+... {
+... $group:
+... {
+... _id:"$item",
+... minTotalAmount:{$min:{$multiply:["$price","$quantity"]}},
+... minQuantity:{$min:"$quantity"}
+... }
+... }
+... ]
+...            )
+{ "_id" : "mobile", "minTotalAmount" : 84000, "minQuantity" : 7 }
+{ "_id" : "pens", "minTotalAmount" : 480, "minQuantity" : 12 }
+{ "_id" : "abc", "minTotalAmount" : 5000, "minQuantity" : 5 }
+{ "_id" : "chocolate", "minTotalAmount" : 42000, "minQuantity" : 21 }
+{ "_id" : "srs", "minTotalAmount" : 40000, "minQuantity" : 10 }
+{ "_id" : "Bags", "minTotalAmount" : 5200, "minQuantity" : 13 }
+{ "_id" : "wallet", "minTotalAmount" : 30000, "minQuantity" : 12 }
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+> db.sales.insert({_id:110,item:"mobile",quantity:10,date:ISODate(),price:2000})
+WriteResult({ "nInserted" : 1 })
+> db.sales.aggregate( [ { $group: { _id:"$item", minTotalAmount:{$min:{$multiply:["$price","$quantity"]}}, minQuantity:{$min:"$quantity"} } } ]            )
+{ "_id" : "mobile", "minTotalAmount" : 20000, "minQuantity" : 7 }
+{ "_id" : "pens", "minTotalAmount" : 480, "minQuantity" : 12 }
+{ "_id" : "abc", "minTotalAmount" : 5000, "minQuantity" : 5 }
+{ "_id" : "chocolate", "minTotalAmount" : 42000, "minQuantity" : 21 }
+{ "_id" : "srs", "minTotalAmount" : 40000, "minQuantity" : 10 }
+{ "_id" : "Bags", "minTotalAmount" : 5200, "minQuantity" : 13 }
+{ "_id" : "wallet", "minTotalAmount" : 30000, "minQuantity" : 12 }
+>
+> db.marks.aggregate({$project:{Quizmin:{$min:"$Quiz"},"Assignment_min_marks":{$min:"$Assignment"},examMin:{$min:["$ISA","$ESA"]}}})
+{ "_id" : 121, "Quizmin" : 5, "Assignment_min_marks" : 12, "examMin" : 40 }
+{ "_id" : 122, "Quizmin" : 10, "Assignment_min_marks" : 10, "examMin" : 30 }
+{ "_id" : 123, "Quizmin" : 7, "Assignment_min_marks" : 20, "examMin" : 40 }
+{ "_id" : 124, "Quizmin" : 7, "Assignment_min_marks" : 9, "examMin" : 40 }
+>
+> db.sales.aggregate(
+...             [
+... {
+... $project:
+...              {
+... item:1,
+... discount:
+... {
+... $cond:{if;{$gte:["$qty",250]},then:30,else:20}
+... }
+... }
+...           }
+... }
+2019-03-05T09:09:50.624+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):9:9
+>           ]
+2019-03-05T09:09:50.630+0530 E QUERY    [js] SyntaxError: expected expression, got ']' @(shell):1:0
+> )
+2019-03-05T09:09:53.376+0530 E QUERY    [js] SyntaxError: expected expression, got ')' @(shell):1:0
+> db.sales.aggregate(
+...             [
+... {
+... $project:
+...              {
+... item:1,
+... discount:
+... {
+... $cond:{if;{$gte:["$qty",250]},then:30,else:20}
+... }
+... }
+...           }
+... }
+2019-03-05T09:09:53.417+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):9:9
+>           ]
+2019-03-05T09:09:53.420+0530 E QUERY    [js] SyntaxError: expected expression, got ']' @(shell):1:0
+> db.sales.aggregate([{$project:{ item:1, discount: { $cond:{if;{$gte:["$qty",250]},then:30,else:20} } }} ])
+2019-03-05T09:10:48.276+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):1:61
+> db.sales.aggregate([{$project:{ item:1, discount: { $cond:{if:{$gte:["$qty",250]},then:30,else:20} } }} ])
+{ "_id" : 107, "item" : "wallet", "discount" : 20 }
+{ "_id" : 108, "item" : "chocolate", "discount" : 20 }
+{ "_id" : 100, "item" : "abc", "discount" : 20 }
+{ "_id" : 102, "item" : "srs", "discount" : 20 }
+{ "_id" : 103, "item" : "pens", "discount" : 20 }
+{ "_id" : 104, "item" : "Bags", "discount" : 20 }
+{ "_id" : 105, "item" : "mobile", "discount" : 20 }
+{ "_id" : 106, "item" : "wallet", "discount" : 20 }
+{ "_id" : 110, "item" : "mobile", "discount" : 20 }
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+{ "_id" : 110, "item" : "mobile", "quantity" : 10, "date" : ISODate("2019-03-05T03:29:58.552Z"), "price" : 2000 }
+> db.sales.aggregate([{$project:{ item:1, discount: { $cond:{if:{$gte:["$qty",5]},then:30,else:20} } }} ])
+{ "_id" : 107, "item" : "wallet", "discount" : 20 }
+{ "_id" : 108, "item" : "chocolate", "discount" : 20 }
+{ "_id" : 100, "item" : "abc", "discount" : 20 }
+{ "_id" : 102, "item" : "srs", "discount" : 20 }
+{ "_id" : 103, "item" : "pens", "discount" : 20 }
+{ "_id" : 104, "item" : "Bags", "discount" : 20 }
+{ "_id" : 105, "item" : "mobile", "discount" : 20 }
+{ "_id" : 106, "item" : "wallet", "discount" : 20 }
+{ "_id" : 110, "item" : "mobile", "discount" : 20 }
+> db.sales.aggregate([{$project:{ item:1, discount: { $cond:{if:{$gte:["$qty",7]},then:30,else:20} } }} ])
+{ "_id" : 107, "item" : "wallet", "discount" : 20 }
+{ "_id" : 108, "item" : "chocolate", "discount" : 20 }
+{ "_id" : 100, "item" : "abc", "discount" : 20 }
+{ "_id" : 102, "item" : "srs", "discount" : 20 }
+{ "_id" : 103, "item" : "pens", "discount" : 20 }
+{ "_id" : 104, "item" : "Bags", "discount" : 20 }
+{ "_id" : 105, "item" : "mobile", "discount" : 20 }
+{ "_id" : 106, "item" : "wallet", "discount" : 20 }
+{ "_id" : 110, "item" : "mobile", "discount" : 20 }
+> db.sales.aggregate([{$project:{ item:1, discount: { $cond:{if:[{$gte:["$qty",7]},30,20]} } }} ])
+2019-03-05T09:16:01.784+0530 E QUERY    [js] Error: command failed: {
+        "ok" : 0,
+        "errmsg" : "Missing 'then' parameter to $cond",
+        "code" : 17081,
+        "codeName" : "Location17081"
+} : aggregate failed :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+doassert@src/mongo/shell/assert.js:18:14
+_assertCommandWorked@src/mongo/shell/assert.js:534:17
+assert.commandWorked@src/mongo/shell/assert.js:618:16
+DB.prototype._runAggregate@src/mongo/shell/db.js:260:9
+DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1062:12
+@(shell):1:1
+> db.sales.aggregate([{$project:{ item:1, discount: { $cond:[{$gte:["$qty",7]},30,20]} } }} ])
+2019-03-05T09:17:02.368+0530 E QUERY    [js] SyntaxError: missing ] after element list @(shell):1:88
+> db.sales.aggregate([{$project:{ item:1, discount: { $cond:[{$gte:["$quantity",7]},30,20]} } } ])
+{ "_id" : 107, "item" : "wallet", "discount" : 30 }
+{ "_id" : 108, "item" : "chocolate", "discount" : 30 }
+{ "_id" : 100, "item" : "abc", "discount" : 20 }
+{ "_id" : 102, "item" : "srs", "discount" : 30 }
+{ "_id" : 103, "item" : "pens", "discount" : 30 }
+{ "_id" : 104, "item" : "Bags", "discount" : 30 }
+{ "_id" : 105, "item" : "mobile", "discount" : 30 }
+{ "_id" : 106, "item" : "wallet", "discount" : 30 }
+{ "_id" : 110, "item" : "mobile", "discount" : 30 }
+> db.createCollection('Mycol')
+{ "ok" : 1 }
+> db.MycolminsertMany([{_id:1,"a":8},{_id:1,"a":[41.68,88.19]},{_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},{_id:3,"a":"caribou"},{_id:5}])
+2019-03-05T09:22:56.560+0530 E QUERY    [js] TypeError: db.MycolminsertMany is not a function :
+@(shell):1:1
+> db.Mycol.insertMany([{_id:1,"a":8},{_id:1,"a":[41.68,88.19]},{_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},{_id:3,"a":"caribou"},{_id:5}])
+2019-03-05T09:23:12.994+0530 E QUERY    [js] BulkWriteError: write error at item 1 in bulk operation :
+BulkWriteError({
+        "writeErrors" : [
+                {
+                        "index" : 1,
+                        "code" : 11000,
+                        "errmsg" : "E11000 duplicate key error collection: test.Mycol index: _id_ dup key: { : 1.0 }",
+                        "op" : {
+                                "_id" : 1,
+                                "a" : [
+                                        41.68,
+                                        88.19
+                                ]
+                        }
+                }
+        ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 1,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+BulkWriteError@src/mongo/shell/bulk_api.js:369:48
+BulkWriteResult/this.toError@src/mongo/shell/bulk_api.js:333:24
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1173:1
+DBCollection.prototype.insertMany@src/mongo/shell/crud_api.js:314:5
+@(shell):1:1
+> db.Mycol.insertMany([{_id:0,"a":8},{_id:1,"a":[41.68,88.19]},{_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},{_id:3,"a":"caribou"},{_id:5},{_id:4,"a":Number(71)}])
+2019-03-05T09:24:21.660+0530 E QUERY    [js] BulkWriteError: write error at item 1 in bulk operation :
+BulkWriteError({
+        "writeErrors" : [
+                {
+                        "index" : 1,
+                        "code" : 11000,
+                        "errmsg" : "E11000 duplicate key error collection: test.Mycol index: _id_ dup key: { : 1.0 }",
+                        "op" : {
+                                "_id" : 1,
+                                "a" : [
+                                        41.68,
+                                        88.19
+                                ]
+                        }
+                }
+        ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 1,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+BulkWriteError@src/mongo/shell/bulk_api.js:369:48
+BulkWriteResult/this.toError@src/mongo/shell/bulk_api.js:333:24
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1173:1
+DBCollection.prototype.insertMany@src/mongo/shell/crud_api.js:314:5
+@(shell):1:1
+> db.Mycol.insertMany([{_id:0,"a":8},{_id:1,"a":[41.68,88.19]},{_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},{_id:3,"a":"caribou"},{_id:5},{_id:4,"a":Number(71)}])
+2019-03-05T09:24:40.653+0530 E QUERY    [js] BulkWriteError: write error at item 0 in bulk operation :
+BulkWriteError({
+        "writeErrors" : [
+                {
+                        "index" : 0,
+                        "code" : 11000,
+                        "errmsg" : "E11000 duplicate key error collection: test.Mycol index: _id_ dup key: { : 0.0 }",
+                        "op" : {
+                                "_id" : 0,
+                                "a" : 8
+                        }
+                }
+        ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 0,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+BulkWriteError@src/mongo/shell/bulk_api.js:369:48
+BulkWriteResult/this.toError@src/mongo/shell/bulk_api.js:333:24
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1173:1
+DBCollection.prototype.insertMany@src/mongo/shell/crud_api.js:314:5
+@(shell):1:1
+> db.Mycol.insertMany([{_id:0,"a":8},{_id:1,"a":[41.68,88.19]},{_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},{_id:3,"a":"caribou"},{_id:5},{_id:4,"a":Number(71)}])db.Mycol.find()
+2019-03-05T09:24:53.007+0530 E QUERY    [js] SyntaxError: missing ; before statement @(shell):1:167
+> db.Mycol.insertMany([{_id:0,"a":8},{_id:1,"a":[41.68,88.19]},{_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},{_id:3,"a":"caribou"},{_id:5},{_id:4,"a":Number(71)}])db.Mycol.find()
+2019-03-05T09:25:00.865+0530 E QUERY    [js] SyntaxError: missing ; before statement @(shell):1:167
+> db.Mycol.insertMany([{_id:0,"a":8},{_id:1,"a":[41.68,88.19]},{_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},{_id:3,"a":"caribou"},{_id:5},{_id:4,"a":Number(71)}])
+2019-03-05T09:27:33.536+0530 E QUERY    [js] BulkWriteError: write error at item 0 in bulk operation :
+BulkWriteError({
+        "writeErrors" : [
+                {
+                        "index" : 0,
+                        "code" : 11000,
+                        "errmsg" : "E11000 duplicate key error collection: test.Mycol index: _id_ dup key: { : 0.0 }",
+                        "op" : {
+                                "_id" : 0,
+                                "a" : 8
+                        }
+                }
+        ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 0,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+BulkWriteError@src/mongo/shell/bulk_api.js:369:48
+BulkWriteResult/this.toError@src/mongo/shell/bulk_api.js:333:24
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1173:1
+DBCollection.prototype.insertMany@src/mongo/shell/crud_api.js:314:5
+@(shell):1:1
+> db.Mycol.insertMany
+function (documents, options) {
+    var opts = Object.extend({}, options || {});
+    opts.ordered = (typeof opts.ordered == 'boolean') ? opts.ordered : true;
+
+    // Ensure all documents have an _id
+    documents = documents.map(function(x) {
+        return this.addIdIfNeeded(x);
+    }, this);
+
+    // Get the write concern
+    var writeConcern = this._createWriteConcern(opts);
+
+    // Result
+    var result = {acknowledged: (writeConcern && writeConcern.w == 0) ? false : true};
+
+    // Use bulk operation API already in the shell
+    var bulk = opts.ordered ? this.initializeOrderedBulkOp() : this.initializeUnorderedBulkOp();
+
+    // Add all operations to the bulk operation
+    documents.forEach(function(doc) {
+        bulk.insert(doc);
+    });
+
+    // Execute bulk write operation
+    bulk.execute(writeConcern);
+
+    if (!result.acknowledged) {
+        return result;
+    }
+
+    // Set all the created inserts
+    result.insertedIds = documents.map(function(x) {
+        return x._id;
+    });
+
+    // Return the result
+    return result;
+}
+> (
+... [
+... {_id:0,"a":8},
+... {_id:1,"a":[41.68,88.19]},
+... {_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}},
+... {_id:3,"a":"caribou"},
+... {_id:4,"a":Number(71)},
+... {_id:5}
+... ]
+... )
+[
+        {
+                "_id" : 0,
+                "a" : 8
+        },
+        {
+                "_id" : 1,
+                "a" : [
+                        41.68,
+                        88.19
+                ]
+        },
+        {
+                "_id" : 2,
+                "a" : {
+                        "a" : "apple",
+                        "b" : "banana",
+                        "c" : "carrot"
+                }
+        },
+        {
+                "_id" : 3,
+                "a" : "caribou"
+        },
+        {
+                "_id" : 4,
+                "a" : 71
+        },
+        {
+                "_id" : 5
+        }
+]
+> db.Mycol.find()
+{ "_id" : 1, "a" : 8 }
+{ "_id" : 0, "a" : 8 }
+> db.adminCommand({renameCollection:"mca.Mycol",to:"mca.Mycollection"})
+{
+        "ok" : 0,
+        "errmsg" : "source namespace does not exist",
+        "code" : 26,
+        "codeName" : "NamespaceNotFound"
+}
+> db.adminCommand({renameCollection:"mca.Mycol",to:"mca.Mycollection"})
+{
+        "ok" : 0,
+        "errmsg" : "source namespace does not exist",
+        "code" : 26,
+        "codeName" : "NamespaceNotFound"
+}
+> show db
+2019-03-05T09:31:15.326+0530 E QUERY    [js] Error: don't know how to show [db] :
+shellHelper.show@src/mongo/shell/utils.js:1055:11
+shellHelper@src/mongo/shell/utils.js:766:15
+@(shellhelp2):1:1
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> use mca
+switched to db mca
+> use test
+switched to db test
+> db.adminCommand({renameCollection:"test.Mycol",to:"test.Mycollection"})
+{ "ok" : 1 }
+> db.Mycollection.Find()
+2019-03-05T09:32:24.327+0530 E QUERY    [js] TypeError: db.Mycollection.Find is not a function :
+@(shell):1:1
+> db.Mycollection.find()
+{ "_id" : 1, "a" : 8 }
+{ "_id" : 0, "a" : 8 }
+> use pes
+switched to db pes
+> show pes
+2019-03-05T09:33:12.007+0530 E QUERY    [js] Error: don't know how to show [pes] :
+shellHelper.show@src/mongo/shell/utils.js:1055:11
+shellHelper@src/mongo/shell/utils.js:766:15
+@(shellhelp2):1:1
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> use pes
+switched to db pes
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> use mca
+switched to db mca
+> use pes
+switched to db pes
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> db.runCommand({create:"sana",capped:true,size:105056723})
+{ "ok" : 1 }
+> show collections
+sana
+> db.sana.drop()
+true
+> show collections
+> db.
+...
+...
+> dbsales.find()
+2019-03-05T09:44:14.244+0530 E QUERY    [js] ReferenceError: dbsales is not defined :
+@(shell):1:1
+> db.sales.find()
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> switch mca
+2019-03-05T09:44:40.129+0530 E QUERY    [js] SyntaxError: missing ( before switch expression @(shell):1:7
+> use mca
+switched to db mca
+> db.sales.find()
+> use test
+switched to db test
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+{ "_id" : 110, "item" : "mobile", "quantity" : 10, "date" : ISODate("2019-03-05T03:29:58.552Z"), "price" : 2000 }
+> db.sales.find().limit(5)
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> create.db('pes')
+2019-03-05T09:46:47.023+0530 E QUERY    [js] ReferenceError: create is not defined :
+@(shell):1:1
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+{ "_id" : 110, "item" : "mobile", "quantity" : 10, "date" : ISODate("2019-03-05T03:29:58.552Z"), "price" : 2000 }
+> db.sales.count()
+9
+> db.sales.count({date:{$gt:new Date('02/02/2019')}})
+9
+> db.sales.count({date:{$gt:new Date('05/02/2019')}})
+0
+> db.sales.count({date:{$gt:new Date('03/02/2019')}})
+1
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+{ "_id" : 110, "item" : "mobile", "quantity" : 10, "date" : ISODate("2019-03-05T03:29:58.552Z"), "price" : 2000 }
+> db.sales.find().skip(3)
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+{ "_id" : 110, "item" : "mobile", "quantity" : 10, "date" : ISODate("2019-03-05T03:29:58.552Z"), "price" : 2000 }
+> db.sales.find().skip(3).limit()
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+{ "_id" : 110, "item" : "mobile", "quantity" : 10, "date" : ISODate("2019-03-05T03:29:58.552Z"), "price" : 2000 }
+> db.sales.find().skip(3).limit(3)
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+{ "_id" : 110, "item" : "mobile", "quantity" : 10, "date" : ISODate("2019-03-05T03:29:58.552Z"), "price" : 2000 }
+> db.sales.count({date:{$gt:new Date('03/02/2013')}})
+9
+> db.sales.find().skip(5).liit(2)
+2019-03-05T09:56:54.328+0530 E QUERY    [js] TypeError: db.sales.find(...).skip(...).liit is not a function :
+@(shell):1:1
+> db.sales.find().skip(5).limit(2)
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+> db.sales.find().skip(5).limit(-2)
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+> db.sales.find().skip(3).limit(-2)
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+> db.Mycol.find()
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> use mca
+switched to db mca
+> db.Mycol.find()
+> show collections
+student
+> use test
+switched to db test
+> show collections
+Employee
+Mycollection
+books
+deduction
+dependents
+details
+education
+emloyee
+employee
+insurance
+item-by-sales
+itembysales
+marks
+restraurants
+sales
+sample
+semfour
+student
+user
+workforce
+> db.Mycollections
+test.Mycollections
+> db.Mycollections.find()
+> db.Mycollections.insert({_id:0,"a":8})
+WriteResult({ "nInserted" : 1 })
+> db.Mycollections.insert({_id:1,"a":[41.68,88.19]})
+WriteResult({ "nInserted" : 1 })
+> db.Mycollections.insert({_id:2,"a":{"a":"apple","b":"banana","c":"carrot"}})
+WriteResult({ "nInserted" : 1 })
+> db.Mycollections.insert({_id:3,"a":"caribou"})
+WriteResult({ "nInserted" : 1 })
+>
+> db.Mycollections.insert({_id:4,"a":Number(71)})
+WriteResult({ "nInserted" : 1 })
+> db.Mycollections.insert({_id:5})
+WriteResult({ "nInserted" : 1 })
+> db.Mycollections.find()
+{ "_id" : 0, "a" : 8 }
+{ "_id" : 1, "a" : [ 41.68, 88.19 ] }
+{ "_id" : 2, "a" : { "a" : "apple", "b" : "banana", "c" : "carrot" } }
+{ "_id" : 3, "a" : "caribou" }
+{ "_id" : 4, "a" : 71 }
+{ "_id" : 5 }
+> db.Mycollections.aggregate([{$project:{a:{$type:"$a"}}}])
+{ "_id" : 0, "a" : "double" }
+{ "_id" : 1, "a" : "array" }
+{ "_id" : 2, "a" : "object" }
+{ "_id" : 3, "a" : "string" }
+{ "_id" : 4, "a" : "double" }
+{ "_id" : 5, "a" : "missing" }
+>

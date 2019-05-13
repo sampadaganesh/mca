@@ -1,0 +1,36 @@
+import pymongo
+from pymongo import MongoClient
+conn = pymongo.MongoClient("mongodb://localhost")
+db= conn.pes
+coll=db.movie
+def insert():
+	Title=input("Enter the movie title")
+	Writer=input("Enter the writer")
+	Year=int(input("Enter the year"))
+	Franchise =input("Enter the franchise")
+	Actor=input("Enter the actor")
+	Actress=input("Enter the movieActress")
+	db.movie.insert_one(
+		{
+			"title":Title,
+			"writer":Writer,
+			"year":Year,
+			"franch":Franchise,
+
+			"actor":{"hero":Actor,
+				   "heroine":Actress}}
+		)
+
+n = input("Enter the no of documents needed")
+for i in range(0,int(n)):
+	insert()
+movies = coll.find()
+for x in movies:
+	print(x)
+for y in coll.find({"writer":"Quentin Tarantino"}):
+	print(y)
+for z in coll.find({"actor":"Brad Pitt"}):
+	print(z)
+for a in coll.find({"franch":"Harry"}):
+	print(a)
+for v in coll.find()

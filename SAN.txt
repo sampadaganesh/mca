@@ -1,0 +1,26 @@
+clustering --  grouping of similar entities.
+regression -- helps predict numeric operation
+classification-- helps predict categorical values 
+association -- what goes with what or relationship between 2
+
+
+regression--
+pd 
+1. plot matplotlib and sctter
+2.Linear model
+
+
+7026040603
+
+2000
+
+16000
+
+6000
+12000
+Total: 78000
+
+9148618126
+
+
+Every day is special when I am with you but today is more special because it is your birthday! I love you, sweetheart.

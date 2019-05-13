@@ -1,0 +1,64 @@
+$Group:
+
+Groups document by some specified expresssion and options and outputs to the next stage a document for each distinct grouping.
+
+{$group:{_id:<expression>,<field1>:{<accumulator>:<expression1>},......}}
+
+Group by::
+	It doesn't order in output
+	it is random
+
+create a collection called as sales that has id,item,date,Quantity,price
+
+Querries:
+Group by all our document in the year
+db.sales.aggregate([$group:{_id:{year:{$year:"$date"}}}])
+
+db.sales.aggregate([{$group: {_id: {month:{$month: "$date"}}}}])
+{ "_id" : { "month" : 2 } }
+> db.sales.aggregate([{$group: {_id: {dayOfMonth:{$dayOfMonth: "$date"}}}}])
+{ "_id" : { "dayOfMonth" : 6 } }
+> db.sales.aggregate([{$group: {_id: {dayOfYear:{$dayOfYear: "$date"}}}}])
+{ "_id" : { "dayOfYear" : 37 } }
+> db.sales.aggregate([{$group: {_id: {hour:{$hour: "$date"}}}}])
+{ "_id" : { "hour" : 4 } }
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+> db.sales.remove({_id:106})
+WriteResult({ "nRemoved" : 1 })
+> db.sales.insert({_id:100,item:"abc",quantity:5,date:ISODate(),price:1000})
+WriteResult({ "nInserted" : 1 })
+> db.sales.insert({_id:102,item:"srs",quantity:10,date:ISODate(),price:4000})
+WriteResult({ "nInserted" : 1 })
+> db.sales.insert({_id:103,item:"pens",quantity:12,date:ISODate(),price:40})
+WriteResult({ "nInserted" : 1 })
+> db.sales.insert({_id:104,item:"Bags",quantity:13,date:ISODate(),price:400})
+WriteResult({ "nInserted" : 1 })
+> db.sales.insert({_id:105,item:"mobile",quantity:7,date:ISODate(),price:12000})
+WriteResult({ "nInserted" : 1 })
+> db.sales.insert({_id:106,item:"wallet",quantity:22,date:ISODate(),price:2500})
+WriteResult({ "nInserted" : 1 })
+> db.sales.aggregate([{$group:{_id:{year:{$year:"$date"}}}}])
+{ "_id" : { "year" : 2019 } }
+> db.sales.aggregate([{$group: {_id: {month:{$month: "$date"}}}}])
+{ "_id" : { "month" : 2 } }
+> db.sales.find()
+{ "_id" : 107, "item" : "wallet", "quantity" : 12, "date" : ISODate("2019-02-06T04:11:31.188Z"), "price" : 2500 }
+{ "_id" : 108, "item" : "chocolate", "quantity" : 21, "date" : ISODate("2019-02-06T04:12:15.970Z"), "price" : 2000 }
+{ "_id" : 100, "item" : "abc", "quantity" : 5, "date" : ISODate("2019-02-06T04:17:20.653Z"), "price" : 1000 }
+{ "_id" : 102, "item" : "srs", "quantity" : 10, "date" : ISODate("2019-02-06T04:17:41.814Z"), "price" : 4000 }
+{ "_id" : 103, "item" : "pens", "quantity" : 12, "date" : ISODate("2019-02-06T04:17:54.719Z"), "price" : 40 }
+{ "_id" : 104, "item" : "Bags", "quantity" : 13, "date" : ISODate("2019-02-06T04:18:10.095Z"), "price" : 400 }
+{ "_id" : 105, "item" : "mobile", "quantity" : 7, "date" : ISODate("2019-02-06T04:18:24.312Z"), "price" : 12000 }
+{ "_id" : 106, "item" : "wallet", "quantity" : 22, "date" : ISODate("2019-02-06T04:18:39.898Z"), "price" : 2500 }
+
+
+Group By Month, day and year.
+
+db.sales.aggregate(
+... [
+... {$group:{_id:{month:{$month:"$date"},day:{$dayOfMonth:"$date"},year:{$year:"$date"}}}}])
+{ "_id" : { "month" : 2, "day" : 6, "year" : 2019 } }

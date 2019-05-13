@@ -1,0 +1,356 @@
+db.invoice.aggregate(
+   [
+      {
+        $group : {_id : "$inv_date",
+           totalCost: { $sum: { $multiply: [ "$rate", "$qty" ] } },
+           avgQty: { $avg: "$qty" },
+           count: { $sum: 1 }
+        }
+     }
+  ]
+).pretty();
+
+
+db.invoice.aggregate(
+	[
+		{
+			$group:{_id:{invoice_date:"$date", item:"$item"},
+				totalcost:{$sum:{$multiply:["$rate","$qty"]}},
+				Average_Quantity:{$avg:"$qty"},
+				}
+		}
+		]
+		)
+
+		db.invoice.aggregate(
+   [
+      {
+        $group : {_id : {inv_date : "$inv_date",item : "$item"},
+           totalCost: { $sum: { $multiply: [ "$rate", "$qty" ] } },
+           avgQty: { $avg: "$qty" },
+           count: { $sum: 1 }
+        }
+     }
+  ]
+).pretty();
+
+
+db.invoice.aggregate(
+   [
+    { 
+	$match : {date : "23-Sep-2018"}
+    },
+      {
+        $group : {_id : {date : "$date",item : "$item"},
+           Total_Cost: { $sum: { $multiply: [ "$rate", "$qty" ] } },
+           Average_Quantity: { $avg: "$qty" },
+        }
+     }
+  ]
+)
+
+db.invoice.aggregate(
+	 [
+	 	 {
+	 	 	 $group :
+	 	 	 		 { _id :"$item",invoice_date:{$push:"$date"}
+	 	 			 }
+	 	  } 
+	 ]
+	  )
+$group:{_id:{date:"$date", item:"$item"},
+
+
+ db.invoice.aggregate( [ { $group : { _id : "$item" ,invoice_date:{$push:"$date"}} } ] )
+
+ db.invoice.aggregate( [ { $group: {_id: {$gt:3,$lt:9} }}])
+
+ {
+  _id: 5,
+  grades: [
+     { grade: 80, mean: 75, std: 8 },
+     { grade: 85, mean: 90, std: 5 },
+     { grade: 90, mean: 85, std: 3 }
+  ]
+}
+
+
+db.Employee.updateMany({},$set
+
+
+
+
+
+ use mca
+switched to db mca
+> show collections
+invoice
+pets
+student
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mca     0.000GB
+test    0.001GB
+> use test
+switched to db test
+> show collections
+Employee
+Mycollection
+Mycollections
+books
+deduction
+dependents
+details
+education
+emloyee
+employee
+insurance
+item-by-sales
+itembysales
+marks
+restraurants
+sales
+sample
+semfour
+student
+user
+workforce
+> db.Employee.find()
+{ "_id" : 123, "emp_code" : "e12", "emp_name" : "sahana", "doj" : "23-jan-2019", "salary" : 20000 }
+{ "_id" : 124, "emp_code" : "e14", "emp_name" : "Nalini", "doj" : "24-jan-2019", "salary" : 9000 }
+{ "_id" : 125, "emp_code" : "e16", "emp_name" : "Ganesh", "doj" : "29-jan-2019", "salary" : 10000 }
+{ "_id" : 126, "emp_code" : "e17", "emp_name" : "Manya", "doj" : "20-dec-2018", "salary" : 9000 }
+{ "_id" : 127, "emp_code" : "e18", "emp_name" : "Raghu", "doj" : "01-may-2018", "salary" : 8000 }
+{ "_id" : 11, "emp_code" : "e21", "emp_name" : "sana", "doj" : "13-01-2019", "salary" : 10000, "deduction" : { "pf" : 4000, "pt" : 1000 } }
+{ "_id" : 12, "emp_code" : "e22", "emp_name" : "mamata", "doj" : "22-01-2009", "salary" : 20000, "deduction" : { "pf" : 6000, "pt" : 500 } }
+{ "_id" : 13, "emp_code" : "e23", "emp_name" : "Nihan", "doj" : "22-12-2015", "salary" : 15000, "deduction" : { "pf" : 4000, "pt" : 1000 } }
+{ "_id" : 14, "emp_code" : "e24", "emp_name" : "Teju", "doj" : "28-02-2015", "salary" : 25000, "deduction" : { "pf" : 6000, "pt" : 4000 } }
+{ "_id" : 15, "emp_code" : "e25", "emp_name" : "Naman", "doj" : "12-02-2015", "salary" : 15000, "deduction" : { "pf" : 5000, "pt" : 100 } }
+{ "_id" : 130, "emp_code" : "e18", "emp_name" : "Bhavya", "doj" : "10-dec-2018", "salary" : 90000 }
+> use mca
+switched to db mca
+> db.createCollection('Employee')
+{ "ok" : 1 }
+> db.Employee.insert({_id:111,emp_code:"e11",emp_name:"sanaa",doj:"23-jan-2011",salary})
+2019-03-13T10:06:55.754+0530 E QUERY    [js] ReferenceError: salary is not defined :
+@(shell):1:79
+> db.Employee.insert({_id:111,emp_code:"e11",emp_name:"sanaa",doj:"23-jan-2011",salary:10000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:112,emp_code:"e12",emp_name:"panaa",doj:"23-jan-2012",salary:20000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:113,emp_code:"e13",emp_name:"nalini",doj:"24-jan-2019",salary:30000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:114,emp_code:"e14",emp_name:"ganesh",doj:"14-jan-2016",salary:3000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:115,emp_code:"e15",emp_name:"ragh",doj:"1-may-2016",salary:300000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:116,emp_code:"e16",emp_name:"saam",doj:"10-may-2018",salary:15000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:117,emp_code:"e17",emp_name:"pavan",doj:"15-feb-2019",salary:15000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:118,emp_code:"e18",emp_name:"manya",doj:"14-feb-2019",salary:45000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:119,emp_code:"e19",emp_name:"mamata",doj:"14-mar-2017",salary:85000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:120,emp_code:"e20",emp_name:"aishu",doj:"1-mar-2017",salary:9000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.find()
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa", "doj" : "23-jan-2011", "salary" : 10000 }
+{ "_id" : 112, "emp_code" : "e12", "emp_name" : "panaa", "doj" : "23-jan-2012", "salary" : 20000 }
+{ "_id" : 113, "emp_code" : "e13", "emp_name" : "nalini", "doj" : "24-jan-2019", "salary" : 30000 }
+{ "_id" : 114, "emp_code" : "e14", "emp_name" : "ganesh", "doj" : "14-jan-2016", "salary" : 3000 }
+{ "_id" : 115, "emp_code" : "e15", "emp_name" : "ragh", "doj" : "1-may-2016", "salary" : 300000 }
+{ "_id" : 116, "emp_code" : "e16", "emp_name" : "saam", "doj" : "10-may-2018", "salary" : 15000 }
+{ "_id" : 117, "emp_code" : "e17", "emp_name" : "pavan", "doj" : "15-feb-2019", "salary" : 15000 }
+{ "_id" : 118, "emp_code" : "e18", "emp_name" : "manya", "doj" : "14-feb-2019", "salary" : 45000 }
+{ "_id" : 119, "emp_code" : "e19", "emp_name" : "mamata", "doj" : "14-mar-2017", "salary" : 85000 }
+{ "_id" : 120, "emp_code" : "e20", "emp_name" : "aishu", "doj" : "1-mar-2017", "salary" : 9000 }
+> db.Employee.aggregate( [ { $project : { _id : 1 ,emp_code:1,emp_name:1} } ] )
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa" }
+{ "_id" : 112, "emp_code" : "e12", "emp_name" : "panaa" }
+{ "_id" : 113, "emp_code" : "e13", "emp_name" : "nalini" }
+{ "_id" : 114, "emp_code" : "e14", "emp_name" : "ganesh" }
+{ "_id" : 115, "emp_code" : "e15", "emp_name" : "ragh" }
+{ "_id" : 116, "emp_code" : "e16", "emp_name" : "saam" }
+{ "_id" : 117, "emp_code" : "e17", "emp_name" : "pavan" }
+{ "_id" : 118, "emp_code" : "e18", "emp_name" : "manya" }
+{ "_id" : 119, "emp_code" : "e19", "emp_name" : "mamata" }
+{ "_id" : 120, "emp_code" : "e20", "emp_name" : "aishu" }
+> db.Employee.update({},{$set:{deduction:{pf:2000,pt:200,it:300}}},{multi:true})
+WriteResult({ "nMatched" : 10, "nUpserted" : 0, "nModified" : 10 })
+> db.Employee.find().pretty()
+{
+        "_id" : 111,
+        "emp_code" : "e11",
+        "emp_name" : "sanaa",
+        "doj" : "23-jan-2011",
+        "salary" : 10000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 112,
+        "emp_code" : "e12",
+        "emp_name" : "panaa",
+        "doj" : "23-jan-2012",
+        "salary" : 20000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 113,
+        "emp_code" : "e13",
+        "emp_name" : "nalini",
+        "doj" : "24-jan-2019",
+        "salary" : 30000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 114,
+        "emp_code" : "e14",
+        "emp_name" : "ganesh",
+        "doj" : "14-jan-2016",
+        "salary" : 3000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 115,
+        "emp_code" : "e15",
+        "emp_name" : "ragh",
+        "doj" : "1-may-2016",
+        "salary" : 300000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 116,
+        "emp_code" : "e16",
+        "emp_name" : "saam",
+        "doj" : "10-may-2018",
+        "salary" : 15000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 117,
+        "emp_code" : "e17",
+        "emp_name" : "pavan",
+        "doj" : "15-feb-2019",
+        "salary" : 15000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 118,
+        "emp_code" : "e18",
+        "emp_name" : "manya",
+        "doj" : "14-feb-2019",
+        "salary" : 45000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 119,
+        "emp_code" : "e19",
+        "emp_name" : "mamata",
+        "doj" : "14-mar-2017",
+        "salary" : 85000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 120,
+        "emp_code" : "e20",
+        "emp_name" : "aishu",
+        "doj" : "1-mar-2017",
+        "salary" : 9000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+>
+>
+>
+> db.Employee.aggregate([{$project:
+...
+...
+> db.Employee.aggregate({$project:{_id:1,"deduction.pf":1}})
+{ "_id" : 111, "deduction" : { "pf" : 2000 } }
+{ "_id" : 112, "deduction" : { "pf" : 2000 } }
+{ "_id" : 113, "deduction" : { "pf" : 2000 } }
+{ "_id" : 114, "deduction" : { "pf" : 2000 } }
+{ "_id" : 115, "deduction" : { "pf" : 2000 } }
+{ "_id" : 116, "deduction" : { "pf" : 2000 } }
+{ "_id" : 117, "deduction" : { "pf" : 2000 } }
+{ "_id" : 118, "deduction" : { "pf" : 2000 } }
+{ "_id" : 119, "deduction" : { "pf" : 2000 } }
+{ "_id" : 120, "deduction" : { "pf" : 2000 } }
+> db.Employee.find({},{_id:0,doj:1,salary:1,emp_code:1,"deduction.pf":1})
+{ "emp_code" : "e11", "doj" : "23-jan-2011", "salary" : 10000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e12", "doj" : "23-jan-2012", "salary" : 20000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e13", "doj" : "24-jan-2019", "salary" : 30000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e14", "doj" : "14-jan-2016", "salary" : 3000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e15", "doj" : "1-may-2016", "salary" : 300000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e16", "doj" : "10-may-2018", "salary" : 15000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e17", "doj" : "15-feb-2019", "salary" : 15000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e18", "doj" : "14-feb-2019", "salary" : 45000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e19", "doj" : "14-mar-2017", "salary" : 85000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e20", "doj" : "1-mar-2017", "salary" : 9000, "deduction" : { "pf" : 2000 } }
+> db.Employee.find({},salary:{$gt})
+2019-03-13T10:33:05.951+0530 E QUERY    [js] SyntaxError: missing ) after argument list @(shell):1:26
+> db.Employee.find({salary:{$gt}})
+2019-03-13T10:33:34.497+0530 E QUERY    [js] ReferenceError: $gt is not defined :
+@(shell):1:27
+> db.Employee.find({salary:{$gt:9000}})
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa", "doj" : "23-jan-2011", "salary" : 10000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 112, "emp_code" : "e12", "emp_name" : "panaa", "doj" : "23-jan-2012", "salary" : 20000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 113, "emp_code" : "e13", "emp_name" : "nalini", "doj" : "24-jan-2019", "salary" : 30000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 115, "emp_code" : "e15", "emp_name" : "ragh", "doj" : "1-may-2016", "salary" : 300000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 116, "emp_code" : "e16", "emp_name" : "saam", "doj" : "10-may-2018", "salary" : 15000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 117, "emp_code" : "e17", "emp_name" : "pavan", "doj" : "15-feb-2019", "salary" : 15000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 118, "emp_code" : "e18", "emp_name" : "manya", "doj" : "14-feb-2019", "salary" : 45000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 119, "emp_code" : "e19", "emp_name" : "mamata", "doj" : "14-mar-2017", "salary" : 85000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+> db.Employee.find({salary:{$gt:9000,$lte:12000}})
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa", "doj" : "23-jan-2011", "salary" : 10000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+>
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------)

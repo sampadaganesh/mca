@@ -1,0 +1,401 @@
+1.
+> use mca
+switched to db mca
+> db.createCollection('invoice')
+{ "ok" : 1 }
+
+db.invoice.insert({_id:"i10",item:"laptop",qty:16,rate:5,date:"10-may-2019"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i11",item:"mobile",qty:20,rate:7,date:"01-may-2019"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i12",item:"book",qty:10,rate:8,date:27-Nov-2018"})
+2019-03-13T08:43:25.570+0530 E QUERY    [js] SyntaxError: unterminated string literal @(shell):1:71
+> db.invoice.insert({_id:"i12",item:"book",qty:10,rate:8,date:"27-Nov-2018"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i13",item:"bag",qty:17,rate:7,date:"16-Feb-2019"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i14",item:"Televisison",qty:6,rate:5,date:"20-Apr-2015"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i15",item:"Table",qty:9,rate:6,date:"01-JUl-2018"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i16",item:"chair",qty:8,rate:8,date:"18-jul-2015"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i17",item:"Bed",qty:10,rate:8,date:"23-Sep-2018"})
+WriteResult({ "nInserted" : 1 })
+
+
+ db.invoice.update({_id:"i17"},{$set:{rate:2000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i18"},{$set:{rate:10000}})
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.invoice.update({_id:"i16"},{$set:{rate:10000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i15"},{$set:{rate:1000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i14"},{$set:{rate:80000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i15"},{$set:{rate:800}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i12"},{$set:{rate:200}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i15"},{$set:{rate:1000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i13"},{$set:{rate:800}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i10"},{$set:{rate:30000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.update({_id:"i11"},{$set:{rate:3000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.invoice.insert({_id:"i18",item:"DLP",qty:10,rate:14000,date:"12-Apr-2018"})
+WriteResult({ "nInserted" : 1 })
+> db.invoice.insert({_id:"i19",item:"Pendrive",qty:7,rate:500,date:"26-Sep-2018"})
+WriteResult({ "nInserted" : 1 })
+
+
+2.
+ db.invoice.find()
+{ "_id" : "i10", "item" : "laptop", "qty" : 16, "rate" : 30000, "date" : "10-may-2019" }
+{ "_id" : "i11", "item" : "mobile", "qty" : 20, "rate" : 3000, "date" : "01-may-2019" }
+{ "_id" : "i12", "item" : "book", "qty" : 10, "rate" : 200, "date" : "27-Nov-2018" }
+{ "_id" : "i13", "item" : "bag", "qty" : 17, "rate" : 800, "date" : "16-Feb-2019" }
+{ "_id" : "i14", "item" : "Televisison", "qty" : 6, "rate" : 80000, "date" : "20-Apr-2015" }
+{ "_id" : "i15", "item" : "Table", "qty" : 9, "rate" : 1000, "date" : "01-JUl-2018" }
+{ "_id" : "i16", "item" : "chair", "qty" : 8, "rate" : 10000, "date" : "18-jul-2015" }
+{ "_id" : "i17", "item" : "Bed", "qty" : 10, "rate" : 2000, "date" : "23-Sep-2018" }
+{ "_id" : "i18", "item" : "DLP", "qty" : 10, "rate" : 14000, "date" : "12-Apr-2018" }
+{ "_id" : "i19", "item" : "Pendrive", "qty" : 7, "rate" : 500, "date" : "26-Sep-2018" }
+
+3.
+db.invoice.aggregate(
+	[
+		{
+			$group:{_id:"$date",
+				totalcost:{$sum:{$multiply:["$rate","$qty"]}},
+				Average_Quantity:{$avg:"$qty"},
+				}
+		}
+		]
+		)
+{ "_id" : "26-Sep-2018", "totalcost" : 3500, "Average_Quantity" : 7 }
+{ "_id" : "18-jul-2015", "totalcost" : 80000, "Average_Quantity" : 8 }
+{ "_id" : "23-Sep-2018", "totalcost" : 20000, "Average_Quantity" : 10 }
+{ "_id" : "16-Feb-2019", "totalcost" : 13600, "Average_Quantity" : 17 }
+{ "_id" : "20-Apr-2015", "totalcost" : 480000, "Average_Quantity" : 6 }
+{ "_id" : "27-Nov-2018", "totalcost" : 2000, "Average_Quantity" : 10 }
+{ "_id" : "01-may-2019", "totalcost" : 60000, "Average_Quantity" : 20 }
+{ "_id" : "12-Apr-2018", "totalcost" : 140000, "Average_Quantity" : 10 }
+{ "_id" : "01-JUl-2018", "totalcost" : 9000, "Average_Quantity" : 9 }
+{ "_id" : "10-may-2019", "totalcost" : 480000, "Average_Quantity" : 16 }
+
+4.
+
+ db.invoice.aggregate(
+... [
+... {
+... $group:{_id:{invoice_date:"$date", item:"$item"},
+... totalcost:{$sum:{$multiply:["$rate","$qty"]}},
+... Average_Quantity:{$avg:"$qty"},
+... }
+... }
+... ]
+...  )
+{ "_id" : { "invoice_date" : "26-Sep-2018", "item" : "Pen" }, "totalcost" : 600, "Average_Quantity" : 12 }
+{ "_id" : { "invoice_date" : "26-Sep-2018", "item" : "Pendrive" }, "totalcost" : 3500, "Average_Quantity" : 7 }
+{ "_id" : { "invoice_date" : "23-Sep-2018", "item" : "Box" }, "totalcost" : 200, "Average_Quantity" : 2 }
+{ "_id" : { "invoice_date" : "18-jul-2015", "item" : "chair" }, "totalcost" : 80000, "Average_Quantity" : 8 }
+{ "_id" : { "invoice_date" : "01-JUl-2018", "item" : "Table" }, "totalcost" : 9000, "Average_Quantity" : 9 }
+{ "_id" : { "invoice_date" : "12-Apr-2018", "item" : "DLP" }, "totalcost" : 140000, "Average_Quantity" : 10 }
+{ "_id" : { "invoice_date" : "20-Apr-2015", "item" : "Televisison" }, "totalcost" : 480000, "Average_Quantity" : 6 }
+{ "_id" : { "invoice_date" : "23-Sep-2018", "item" : "Bed" }, "totalcost" : 20000, "Average_Quantity" : 10 }
+{ "_id" : { "invoice_date" : "16-Feb-2019", "item" : "bag" }, "totalcost" : 13600, "Average_Quantity" : 17 }
+{ "_id" : { "invoice_date" : "27-Nov-2018", "item" : "book" }, "totalcost" : 2000, "Average_Quantity" : 10 }
+{ "_id" : { "invoice_date" : "01-may-2019", "item" : "mobile" }, "totalcost" : 60000, "Average_Quantity" : 20 }
+{ "_id" : { "invoice_date" : "10-may-2019", "item" : "laptop" }, "totalcost" : 480000, "Average_Quantity" : 16 }
+
+
+5.
+
+db.invoice.aggregate(
+...    [
+...     {
+... $match : {date : "23-Sep-2018"}
+...     },
+...       {
+...         $group : {_id : {date : "$date",item : "$item"},
+...            Total_Cost: { $sum: { $multiply: [ "$rate", "$qty" ] } },
+...            Average_Quantity: { $avg: "$qty" },
+...         }
+...      }
+...   ]
+... )
+{ "_id" : { "date" : "23-Sep-2018", "item" : "Box" }, "Total_Cost" : 200, "Average_Quantity" : 2 }
+{ "_id" : { "date" : "23-Sep-2018", "item" : "Bed" }, "Total_Cost" : 20000, "Average_Quantity" : 10 }
+
+6.
+
+ db.invoice.aggregate( [ { $group : { _id : "$item" } } ] )
+{ "_id" : "Pendrive" }
+{ "_id" : "DLP" }
+{ "_id" : "Televisison" }
+{ "_id" : "chair" }
+{ "_id" : "bag" }
+{ "_id" : "Box" }
+{ "_id" : "Pen" }
+{ "_id" : "Bed" }
+{ "_id" : "book" }
+{ "_id" : "mobile" }
+{ "_id" : "Table" }
+{ "_id" : "laptop" }
+
+7.
+ db.invoice.aggregate( [ { $group : { _id : "$item" ,invoice_date:{$push:"$date"}} } ] )
+{ "_id" : "Pendrive", "invoice_date" : [ "26-Sep-2018" ] }
+{ "_id" : "DLP", "invoice_date" : [ "12-Apr-2018" ] }
+{ "_id" : "Televisison", "invoice_date" : [ "20-Apr-2015" ] }
+{ "_id" : "chair", "invoice_date" : [ "18-jul-2015" ] }
+{ "_id" : "bag", "invoice_date" : [ "16-Feb-2019" ] }
+{ "_id" : "Box", "invoice_date" : [ "23-Sep-2018" ] }
+{ "_id" : "Pen", "invoice_date" : [ "26-Sep-2018" ] }
+{ "_id" : "Bed", "invoice_date" : [ "23-Sep-2018" ] }
+{ "_id" : "book", "invoice_date" : [ "27-Nov-2018" ] }
+{ "_id" : "mobile", "invoice_date" : [ "01-may-2019" ] }
+{ "_id" : "Table", "invoice_date" : [ "01-JUl-2018" ] }
+{ "_id" : "laptop", "invoice_date" : [ "10-may-2019" ] }
+
+
+8.
+
+db.invoice.find( {_id: { $gt: "i14" , $lt :"i19"} })
+{ "_id" : "i15", "item" : "Table", "qty" : 9, "rate" : 1000, "date" : "01-JUl-2018" }
+{ "_id" : "i16", "item" : "chair", "qty" : 8, "rate" : 10000, "date" : "18-jul-2015" }
+{ "_id" : "i17", "item" : "Bed", "qty" : 10, "rate" : 2000, "date" : "23-Sep-2018" }
+{ "_id" : "i18", "item" : "DLP", "qty" : 10, "rate" : 14000, "date" : "12-Apr-2018" }
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2 scenario:
+1.
+use mca
+switched to db mca
+> db.createCollection('Employee')
+{ "ok" : 1 }
+2.
+
+
+db.Employee.insert({_id:111,emp_code:"e11",emp_name:"sanaa",doj:"23-jan-2011",salary:10000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:112,emp_code:"e12",emp_name:"panaa",doj:"23-jan-2012",salary:20000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:113,emp_code:"e13",emp_name:"nalini",doj:"24-jan-2019",salary:30000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:114,emp_code:"e14",emp_name:"ganesh",doj:"14-jan-2016",salary:3000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:115,emp_code:"e15",emp_name:"ragh",doj:"1-may-2016",salary:300000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:116,emp_code:"e16",emp_name:"saam",doj:"10-may-2018",salary:15000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:117,emp_code:"e17",emp_name:"pavan",doj:"15-feb-2019",salary:15000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:118,emp_code:"e18",emp_name:"manya",doj:"14-feb-2019",salary:45000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:119,emp_code:"e19",emp_name:"mamata",doj:"14-mar-2017",salary:85000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:120,emp_code:"e20",emp_name:"aishu",doj:"1-mar-2017",salary:9000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.find()
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa", "doj" : "23-jan-2011", "salary" : 10000 }
+{ "_id" : 112, "emp_code" : "e12", "emp_name" : "panaa", "doj" : "23-jan-2012", "salary" : 20000 }
+{ "_id" : 113, "emp_code" : "e13", "emp_name" : "nalini", "doj" : "24-jan-2019", "salary" : 30000 }
+{ "_id" : 114, "emp_code" : "e14", "emp_name" : "ganesh", "doj" : "14-jan-2016", "salary" : 3000 }
+{ "_id" : 115, "emp_code" : "e15", "emp_name" : "ragh", "doj" : "1-may-2016", "salary" : 300000 }
+{ "_id" : 116, "emp_code" : "e16", "emp_name" : "saam", "doj" : "10-may-2018", "salary" : 15000 }
+{ "_id" : 117, "emp_code" : "e17", "emp_name" : "pavan", "doj" : "15-feb-2019", "salary" : 15000 }
+{ "_id" : 118, "emp_code" : "e18", "emp_name" : "manya", "doj" : "14-feb-2019", "salary" : 45000 }
+{ "_id" : 119, "emp_code" : "e19", "emp_name" : "mamata", "doj" : "14-mar-2017", "salary" : 85000 }
+{ "_id" : 120, "emp_code" : "e20", "emp_name" : "aishu", "doj" : "1-mar-2017", "salary" : 9000 }
+
+
+3.
+
+db.Employee.aggregate( [ { $project : { _id : 1 ,emp_code:1,emp_name:1} } ] )
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa" }
+{ "_id" : 112, "emp_code" : "e12", "emp_name" : "panaa" }
+{ "_id" : 113, "emp_code" : "e13", "emp_name" : "nalini" }
+{ "_id" : 114, "emp_code" : "e14", "emp_name" : "ganesh" }
+{ "_id" : 115, "emp_code" : "e15", "emp_name" : "ragh" }
+{ "_id" : 116, "emp_code" : "e16", "emp_name" : "saam" }
+{ "_id" : 117, "emp_code" : "e17", "emp_name" : "pavan" }
+{ "_id" : 118, "emp_code" : "e18", "emp_name" : "manya" }
+{ "_id" : 119, "emp_code" : "e19", "emp_name" : "mamata" }
+{ "_id" : 120, "emp_code" : "e20", "emp_name" : "aishu" }
+
+4.
+db.Employee.update({},{$set:{deduction:{pf:2000,pt:200,it:300}}},{multi:true})
+WriteResult({ "nMatched" : 10, "nUpserted" : 0, "nModified" : 10 })
+> db.Employee.find().pretty()
+{
+        "_id" : 111,
+        "emp_code" : "e11",
+        "emp_name" : "sanaa",
+        "doj" : "23-jan-2011",
+        "salary" : 10000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 112,
+        "emp_code" : "e12",
+        "emp_name" : "panaa",
+        "doj" : "23-jan-2012",
+        "salary" : 20000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 113,
+        "emp_code" : "e13",
+        "emp_name" : "nalini",
+        "doj" : "24-jan-2019",
+        "salary" : 30000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 114,
+        "emp_code" : "e14",
+        "emp_name" : "ganesh",
+        "doj" : "14-jan-2016",
+        "salary" : 3000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 115,
+        "emp_code" : "e15",
+        "emp_name" : "ragh",
+        "doj" : "1-may-2016",
+        "salary" : 300000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 116,
+        "emp_code" : "e16",
+        "emp_name" : "saam",
+        "doj" : "10-may-2018",
+        "salary" : 15000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 117,
+        "emp_code" : "e17",
+        "emp_name" : "pavan",
+        "doj" : "15-feb-2019",
+        "salary" : 15000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 118,
+        "emp_code" : "e18",
+        "emp_name" : "manya",
+        "doj" : "14-feb-2019",
+        "salary" : 45000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 119,
+        "emp_code" : "e19",
+        "emp_name" : "mamata",
+        "doj" : "14-mar-2017",
+        "salary" : 85000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+{
+        "_id" : 120,
+        "emp_code" : "e20",
+        "emp_name" : "aishu",
+        "doj" : "1-mar-2017",
+        "salary" : 9000,
+        "deduction" : {
+                "pf" : 2000,
+                "pt" : 200,
+                "it" : 300
+        }
+}
+5.
+
+> db.Employee.aggregate({$project:{_id:1,"deduction.pf":1}})
+{ "_id" : 111, "deduction" : { "pf" : 2000 } }
+{ "_id" : 112, "deduction" : { "pf" : 2000 } }
+{ "_id" : 113, "deduction" : { "pf" : 2000 } }
+{ "_id" : 114, "deduction" : { "pf" : 2000 } }
+{ "_id" : 115, "deduction" : { "pf" : 2000 } }
+{ "_id" : 116, "deduction" : { "pf" : 2000 } }
+{ "_id" : 117, "deduction" : { "pf" : 2000 } }
+{ "_id" : 118, "deduction" : { "pf" : 2000 } }
+{ "_id" : 119, "deduction" : { "pf" : 2000 } }
+
+6.
+ db.Employee.find({},{_id:0,doj:1,salary:1,emp_code:1,"deduction.pf":1})
+{ "emp_code" : "e11", "doj" : "23-jan-2011", "salary" : 10000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e12", "doj" : "23-jan-2012", "salary" : 20000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e13", "doj" : "24-jan-2019", "salary" : 30000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e14", "doj" : "14-jan-2016", "salary" : 3000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e15", "doj" : "1-may-2016", "salary" : 300000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e16", "doj" : "10-may-2018", "salary" : 15000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e17", "doj" : "15-feb-2019", "salary" : 15000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e18", "doj" : "14-feb-2019", "salary" : 45000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e19", "doj" : "14-mar-2017", "salary" : 85000, "deduction" : { "pf" : 2000 } }
+{ "emp_code" : "e20", "doj" : "1-mar-2017", "salary" : 9000, "deduction" : { "pf" : 2000 } }
+
+
+{ "_id" : 120, "deduction" : { "pf" : 2000 } }
+
+7.
+ db.Employee.find({salary:{$gt:9000}})
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa", "doj" : "23-jan-2011", "salary" : 10000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 112, "emp_code" : "e12", "emp_name" : "panaa", "doj" : "23-jan-2012", "salary" : 20000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 113, "emp_code" : "e13", "emp_name" : "nalini", "doj" : "24-jan-2019", "salary" : 30000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 115, "emp_code" : "e15", "emp_name" : "ragh", "doj" : "1-may-2016", "salary" : 300000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 116, "emp_code" : "e16", "emp_name" : "saam", "doj" : "10-may-2018", "salary" : 15000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 117, "emp_code" : "e17", "emp_name" : "pavan", "doj" : "15-feb-2019", "salary" : 15000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 118, "emp_code" : "e18", "emp_name" : "manya", "doj" : "14-feb-2019", "salary" : 45000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+{ "_id" : 119, "emp_code" : "e19", "emp_name" : "mamata", "doj" : "14-mar-2017", "salary" : 85000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+
+8.
+
+db.Employee.find({salary:{$gt:9000,$lte:12000}})
+{ "_id" : 111, "emp_code" : "e11", "emp_name" : "sanaa", "doj" : "23-jan-2011", "salary" : 10000, "deduction" : { "pf" : 2000, "pt" : 200, "it" : 300 } }
+>

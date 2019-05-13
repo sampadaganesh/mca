@@ -1,0 +1,5 @@
+create collection called as customers and insert the fields name, address and phone number and age.
+2. write a function to display all the records without show id
+3. given a particular name find age and address of that particular customer.
+4. find all customer whose age is greater than 50
+5.find aall customer whose stay in banashankari

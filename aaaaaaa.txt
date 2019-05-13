@@ -1,0 +1,35 @@
+ db.student.aggregate( 
+	{$project:
+		{
+		"name":1,
+		"namecode":
+		{ $substrBytes:["$name",0,3]
+		}
+		}
+	}
+)
+
+{ "_id" : 3, "namecode" : "" }
+{ "_id" : 6, "namecode" : "" }
+{ "_id" : 5, "namecode" : "" }
+{ "_id" : 7, "name" : "saam", "namecode" : "saa" }
+{ "_id" : 8, "name" : "saam", "namecode" : "saa" }
+{ "_id" : 1, "name" : "raag", "namecode" : "raa" }
+>
+
+> db.student.aggregate({$match:{marks:{$gt:50}}},{$count:"Passed"})
+{ "Passed" : 6 }
+> db.student.aggregate({$match:{marks:{$gt:93}}},{$count:"Passed"})
+{ "Passed" : 4 }
+> db.student.distinct("sem")
+[ 5, 4 ]
+> db.student.distinct("marks")
+[ 15, 88, 89, 90, 65, 70, 79, 40, 58, 75, 99, 34, 66, 77 ]
+> db.student.find()
+{ "_id" : 3, "marks" : [ 15, 88, 89, 90 ] }
+{ "_id" : 6, "marks" : [ 65, 88, 79, 70 ] }
+{ "_id" : 5, "marks" : [ 75, 58, 99, 40 ] }
+{ "_id" : 7, "name" : "saam", "sem" : 5, "marks" : [ 34, 66, 77, 88, 99 ] }
+{ "_id" : 8, "name" : "saam", "sem" : 4, "marks" : [ 34, 66, 77, 88, 99 ] }
+{ "_id" : 1, "name" : "raag", "sem" : 5, "marks" : [ 77, 88, 99 ] }
+

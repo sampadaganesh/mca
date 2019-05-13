@@ -1,0 +1,247 @@
+1.
+Create a collection called Employee containing the following fields – id, emp_code,
+emp_name. doj (date of join), salary
+Ans:db.createCollection("Employee")
+{ "ok" : 1 }
+
+2.Insert 5 records
+> db.Employee.insert({_id:123,emp_code:"e12",emp_name:"sahana",doj:"23-jan-2019",salary:20000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:124,emp_code:"e14",emp_name:"Nalini",doj:"24-jan-2019",salary:9000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:125,emp_code:"e16",emp_name:"Ganesh",doj:"29-jan-2019",salary:10000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:126,emp_code:"e17",emp_name:"Manya",doj:"20-dec-2018",salary:9000})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:127,emp_code:"e18",emp_name:"Raghu",doj:"01-may-2018",salary:8000})
+WriteResult({ "nInserted" : 1 })
+db.Employee.insert({_id:130,emp_code:"e18",emp_name:"Nihal",doj:"10-dec-2018",salary:90000})
+WriteResult({ "nInserted" : 1 })
+
+ db.Employee.find({},{_id:123})
+{ "_id" : 123 }
+{ "_id" : 124 }
+{ "_id" : 125 }
+{ "_id" : 126 }
+{ "_id" : 127 }
+
+3.
+Display the _id, emp_code and emp_name in the output document
+db.Employee.find({},{_id:123,emp_code:"e12",emp_name:"sahana"})
+{ "_id" : 123, "emp_code" : "e12", "emp_name" : "sahana" }
+{ "_id" : 124, "emp_code" : "e14", "emp_name" : "Nalini" }
+{ "_id" : 125, "emp_code" : "e16", "emp_name" : "Ganesh" }
+{ "_id" : 126, "emp_code" : "e17", "emp_name" : "Manya" }
+{ "_id" : 127, "emp_code" : "e18", "emp_name" : "Raghu" }
+
+
+4.Insert embedded document called deduction that consists of pf, pt it to another 5 documents.
+ db.Employee.insert({_id:11,emp_code:"e21",emp_name:"sana",doj:"13-01-2019",salary:10000,deduction:{pf:4000,pt:1000}})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:12,emp_code:"e22",emp_name:"mamata",doj:"22-01-2009",salary:20000,deduction:{pf:6000,pt:500}})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:13,emp_code:"e23",emp_name:"Nihan",doj:"22-12-2015",salary:15000,deduction:{pf:4000,pt:1000}})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:14,emp_code:"e24",emp_name:"Teju",doj:"28-02-2015",salary:25000,deduction:{pf:6000,pt:4000}})
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insert({_id:15,emp_code:"e25",emp_name:"Naman",doj:"12-02-2015",salary:15000,deduction:{pf:5000,pt:100}})
+WriteResult({ "nInserted" : 1 })
+
+5.
+Display the _id and deduction detail of pf in the output document 
+ db.Employee.find({},{_id:1,"deduction.pf":1})
+{ "_id" : 123 }
+{ "_id" : 124 }
+{ "_id" : 125 }
+{ "_id" : 126 }
+{ "_id" : 127 }
+{ "_id" : 11, "deduction" : { "pf" : 4000 } }
+{ "_id" : 12, "deduction" : { "pf" : 6000 } }
+{ "_id" : 13, "deduction" : { "pf" : 4000 } }
+{ "_id" : 14, "deduction" : { "pf" : 6000 } }
+{ "_id" : 15, "deduction" : { "pf" : 5000 } }
+{ "_id" : 130 }
+
+
+6.
+Include the day, month and year taken from doj, emp_code, pf and salary
+ db.Employee.find({},{_id:0,doj:1,salary:1,emp_code:1,"deduction.pf":1})
+{ "emp_code" : "e12", "doj" : "23-jan-2019", "salary" : 20000 }
+{ "emp_code" : "e14", "doj" : "24-jan-2019", "salary" : 9000 }
+{ "emp_code" : "e16", "doj" : "29-jan-2019", "salary" : 10000 }
+{ "emp_code" : "e17", "doj" : "20-dec-2018", "salary" : 9000 }
+{ "emp_code" : "e18", "doj" : "01-may-2018", "salary" : 8000 }
+{ "emp_code" : "e21", "doj" : "13-01-2019", "salary" : 10000, "deduction" : { "pf" : 4000 } }
+{ "emp_code" : "e22", "doj" : "22-01-2009", "salary" : 20000, "deduction" : { "pf" : 6000 } }
+{ "emp_code" : "e23", "doj" : "22-12-2015", "salary" : 15000, "deduction" : { "pf" : 4000 } }
+{ "emp_code" : "e24", "doj" : "28-02-2015", "salary" : 25000, "deduction" : { "pf" : 6000 } }
+{ "emp_code" : "e25", "doj" : "12-02-2015", "salary" : 15000, "deduction" : { "pf" : 5000 } }
+{ "emp_code" : "e18", "doj" : "10-dec-2018", "salary" : 90000 }
+
+7.
+Display the documents that have the salary equal to 90000
+ db.Employee.find({salary:{$eq:90000}})
+{ "_id" : 130, "emp_code" : "e18", "emp_name" : "Nihal", "doj" : "10-dec-2018", "salary" : 90000 }
+
+8.
+Select the documents where the salary is greater than 9000 and less than or equal to 12000.
+ db.Employee.find({salary:{$gt:9000,$lte:12000}})
+{ "_id" : 125, "emp_code" : "e16", "emp_name" : "Ganesh", "doj" : "29-jan-2019", "salary" : 10000 }
+{ "_id" : 11, "emp_code" : "e21", "emp_name" : "sana", "doj" : "13-01-2019", "salary" : 10000, "deduction" : { "pf" : 4000, "pt" : 1000 } }
+
+9.
+
+ db.createCollection("dependents")
+{ "ok" : 1 }
+> db.dependents.insert({emp_id:123,dep_id:22,no_of_dep:3,age_of_dep:30})
+WriteResult({ "nInserted" : 1 })
+> db.dependents.insert({emp_id:124,dep_id:23,no_of_dep:1,age_of_dep:20})
+WriteResult({ "nInserted" : 1 })
+> db.dependents.insert({emp_id:125,dep_id:24,no_of_dep:2,age_of_dep:25})
+WriteResult({ "nInserted" : 1 })
+> db.dependents.insert({emp_id:126,dep_id:25,no_of_dep:4,age_of_dep:28})
+WriteResult({ "nInserted" : 1 })
+ db.dependents.insert({emp_id:127,dep_id:27,no_of_dep:2,age_of_dep:66})
+WriteResult({ "nInserted" : 1 })
+
+> db.dependents.insert({emp_id:130,dep_id:26,no_of_dep:1,age_of_dep:18})
+WriteResult({ "nInserted" : 1 })
+ db.dependents.find().pretty()
+{
+        "_id" : ObjectId("5c512434e46afeca210931df"),
+        "emp_id" : 123,
+        "dep_id" : 22,
+        "no_of_dep" : 3,
+        "age_of_dep" : 30
+}
+{
+        "_id" : ObjectId("5c512456e46afeca210931e0"),
+        "emp_id" : 124,
+        "dep_id" : 23,
+        "no_of_dep" : 1,
+        "age_of_dep" : 20
+}
+{
+        "_id" : ObjectId("5c51246fe46afeca210931e1"),
+        "emp_id" : 125,
+        "dep_id" : 24,
+        "no_of_dep" : 2,
+        "age_of_dep" : 25
+}
+{
+        "_id" : ObjectId("5c512488e46afeca210931e2"),
+        "emp_id" : 126,
+        "dep_id" : 25,
+        "no_of_dep" : 4,
+        "age_of_dep" : 28
+}
+{
+        "_id" : ObjectId("5c512490e46afeca210931e3"),
+        "emp_id" : 127,
+        "dep_id" : 25,
+        "no_of_dep" : 4,
+        "age_of_dep" : 28
+}
+{
+        "_id" : ObjectId("5c5124a8e46afeca210931e4"),
+        "emp_id" : 130,
+        "dep_id" : 26,
+        "no_of_dep" : 1,
+        "age_of_dep" : 18
+}
+> db.dependents.remove({emp_id:127,dep_id:25,no_of_dep:4,age_of_dep:28})
+WriteResult({ "nRemoved" : 1 })
+> db.dependents.insert({emp_id:127,dep_id:27,no_of_dep:2,age_of_dep:66})
+WriteResult({ "nInserted" : 1 })
+> db.dependents.find().pretty()
+{
+        "_id" : ObjectId("5c512434e46afeca210931df"),
+        "emp_id" : 123,
+        "dep_id" : 22,
+        "no_of_dep" : 3,
+        "age_of_dep" : 30
+}
+{
+        "_id" : ObjectId("5c512456e46afeca210931e0"),
+        "emp_id" : 124,
+        "dep_id" : 23,
+        "no_of_dep" : 1,
+        "age_of_dep" : 20
+}
+{
+        "_id" : ObjectId("5c51246fe46afeca210931e1"),
+        "emp_id" : 125,
+        "dep_id" : 24,
+        "no_of_dep" : 2,
+        "age_of_dep" : 25
+}
+{
+        "_id" : ObjectId("5c512488e46afeca210931e2"),
+        "emp_id" : 126,
+        "dep_id" : 25,
+        "no_of_dep" : 4,
+        "age_of_dep" : 28
+}
+{
+        "_id" : ObjectId("5c5124a8e46afeca210931e4"),
+        "emp_id" : 130,
+        "dep_id" : 26,
+        "no_of_dep" : 1,
+        "age_of_dep" : 18
+}
+{
+        "_id" : ObjectId("5c51255de46afeca210931e5"),
+        "emp_id" : 127,
+        "dep_id" : 27,
+        "no_of_dep" : 2,
+        "age_of_dep" : 66
+}
+
+10.
+db.dependents.find({age_of_dep:{$gte:60}})
+{ "_id" : ObjectId("5c51255de46afeca210931e5"), "emp_id" : 127, "dep_id" : 27, "no_of_dep" : 2, "age_of_dep" : 66 }
+> db.createCollection("insurance")
+{ "ok" : 1 }
+db.insurance.insert({emp_id:127,insurance_id:12,insurance_date:"30-jan-2019",insurance_type:"educational",amt_of_premium:4500})
+WriteResult({ "nInserted" : 1 })
+> db.insurance.find().pretty()
+{
+        "_id" : ObjectId("5c512830e46afeca210931e6"),
+        "emp_id" : 127,
+        "insurance_id" : 12,
+        "insurance_date" : "30-jan-2019",
+        "insurance_type" : "educational",
+        "amt_of_premium" : 4500
+}
+
+11.
+db.dependents.find({age:{$lt:25}})
+> db.dependents.find()
+{ "_id" : ObjectId("5c512434e46afeca210931df"), "emp_id" : 123, "dep_id" : 22, "no_of_dep" : 3, "age_of_dep" : 30 }
+{ "_id" : ObjectId("5c512456e46afeca210931e0"), "emp_id" : 124, "dep_id" : 23, "no_of_dep" : 1, "age_of_dep" : 20 }
+{ "_id" : ObjectId("5c51246fe46afeca210931e1"), "emp_id" : 125, "dep_id" : 24, "no_of_dep" : 2, "age_of_dep" : 25 }
+{ "_id" : ObjectId("5c512488e46afeca210931e2"), "emp_id" : 126, "dep_id" : 25, "no_of_dep" : 4, "age_of_dep" : 28 }
+{ "_id" : ObjectId("5c5124a8e46afeca210931e4"), "emp_id" : 130, "dep_id" : 26, "no_of_dep" : 1, "age_of_dep" : 18 }
+{ "_id" : ObjectId("5c51255de46afeca210931e5"), "emp_id" : 127, "dep_id" : 27, "no_of_dep" : 2, "age_of_dep" : 66 }
+> db.dependents.find({age_of_dep:{$lt:25}})
+{ "_id" : ObjectId("5c512456e46afeca210931e0"), "emp_id" : 124, "dep_id" : 23, "no_of_dep" : 1, "age_of_dep" : 20 }
+{ "_id" : ObjectId("5c5124a8e46afeca210931e4"), "emp_id" : 130, "dep_id" : 26, "no_of_dep" : 1, "age_of_dep" : 18 }
+> db.education.insert({emp_id:124,childreen_id:123,educational_ins:"pesu",fees:100000})
+WriteResult({ "nInserted" : 1 })
+> db.education.insert({emp_id:130,childreen_id:145,educational_ins:"rvm",fees:200000})
+WriteResult({ "nInserted" : 1 })
+> db.education.find().pretty()
+{
+        "_id" : ObjectId("5c512c77e46afeca210931e7"),
+        "emp_id" : 124,
+        "childreen_id" : 123,
+        "educational_ins" : "pesu",
+        "fees" : 100000
+}
+{
+        "_id" : ObjectId("5c512ca5e46afeca210931e8"),
+        "emp_id" : 130,
+        "childreen_id" : 145,
+        "educational_ins" : "rvm",
+        "fees" : 200000
+}

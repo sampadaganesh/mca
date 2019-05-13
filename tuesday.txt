@@ -1,0 +1,89 @@
+26/02/2019
+
+CRUD Command:
+Multiply:
+{$multiply:[<expression1>,<expression2>....]}
+
+
+mulptiply price and quantity and project it as total.
+
+db.sales.aggregate([{$project:{_id:0,item:1,total:{$multiply:["$price","$quantity"]}}}])
+{ "item" : "wallet", "total" : 30000 }
+{ "item" : "chocolate", "total" : 42000 }
+{ "item" : "abc", "total" : 5000 }
+{ "item" : "srs", "total" : 40000 }
+{ "item" : "pens", "total" : 480 }
+{ "item" : "Bags", "total" : 5200 }
+{ "item" : "mobile", "total" : 84000 }
+{ "item" : "wallet", "total" : 55000 }
+
+db.sales.aggregate(
+... [{$project:
+... {date:1,item:1,total:{$multiply:["$price","$quantity"]}}}])
+{ "_id" : 107, "item" : "wallet", "date" : ISODate("2019-02-06T04:11:31.188Z"), "total" : 30000 }
+{ "_id" : 108, "item" : "chocolate", "date" : ISODate("2019-02-06T04:12:15.970Z"), "total" : 42000 }
+{ "_id" : 100, "item" : "abc", "date" : ISODate("2019-02-06T04:17:20.653Z"), "total" : 5000 }
+{ "_id" : 102, "item" : "srs", "date" : ISODate("2019-02-06T04:17:41.814Z"), "total" : 40000 }
+{ "_id" : 103, "item" : "pens", "date" : ISODate("2019-02-06T04:17:54.719Z"), "total" : 480 }
+{ "_id" : 104, "item" : "Bags", "date" : ISODate("2019-02-06T04:18:10.095Z"), "total" : 5200 }
+{ "_id" : 105, "item" : "mobile", "date" : ISODate("2019-02-06T04:18:24.312Z"), "total" : 84000 }
+{ "_id" : 106, "item" : "wallet", "date" : ISODate("2019-02-06T04:18:39.898Z"), "total" : 55000 }
+
+
+Group by the item name and sum of total amount...
+
+ db.sales.aggregate([{$group:{_id:"$item",total:{$sum:{$multiply:["$price","$quantity"]}}}}])
+{ "_id" : "mobile", "total" : 84000 }
+{ "_id" : "pens", "total" : 480 }
+{ "_id" : "abc", "total" : 5000 }
+{ "_id" : "chocolate", "total" : 42000 }
+{ "_id" : "srs", "total" : 40000 }
+{ "_id" : "Bags", "total" : 5200 }
+{ "_id" : "wallet", "total" : 85000 }
+
+
+******************************************************************************************
+Divide:
+
+create a document workforce which consists of id,name,hours,resources
+
+
+Give me the  projection of person name and working days
+
+db.workforce.aggregate( [{$project: {_id:0,name:1,Days:{$divide:["$hours",8]}}}])
+db.workforce.aggregate( [{$project: {_id:0,name:1,Days:{$divide:["$hours",8]}}}])
+{ "name" : "Raag", "Days" : 5 }
+{ "name" : "Mukesh", "Days" : 7.5 }
+{ "name" : "priya", "Days" : 7.5 }
+{ "name" : "pavi", "Days" : 5 }
+
+3.
+Substract Date field From Current date and Project the Differnce interms of hours and not milliseconds.
+db.sales.aggregate( [{$project: {item:1,dateoff:{$divide:[{$subtract:[ISODate(),"$date"]},360000]}}}])
+{ "_id" : 107, "item" : "wallet", "dateoff" : 4846.300783333333 }
+{ "_id" : 108, "item" : "chocolate", "dateoff" : 4846.176388888889 }
+{ "_id" : 100, "item" : "abc", "dateoff" : 4845.330047222223 }
+{ "_id" : 102, "item" : "srs", "dateoff" : 4845.271266666667 }
+{ "_id" : 103, "item" : "pens", "dateoff" : 4845.235419444444 }
+{ "_id" : 104, "item" : "Bags", "dateoff" : 4845.192708333333 }
+{ "_id" : 105, "item" : "mobile", "dateoff" : 4845.153216666667 }
+{ "_id" : 106, "item" : "wallet", "dateoff" : 4845.109922222222 }
+
+
+$out: If the specified one does not already exist based on an aggregation.
+{$out:"<output-collection>"}
+	* It should be the last stage of pipeline command.
+
+Give Of the sum of all the place 
+
+db.sales.aggregate([{$group:{_id:"$item",totalamt:{$sum:{$multiply:["$price","$quantity"]}}}},{$out:"itembysales"}])
+> db.itembysales.find()
+{ "_id" : "mobile", "totalamt" : 84000 }
+{ "_id" : "pens", "totalamt" : 480 }
+{ "_id" : "abc", "totalamt" : 5000 }
+{ "_id" : "chocolate", "totalamt" : 42000 }
+{ "_id" : "srs", "totalamt" : 40000 }
+{ "_id" : "Bags", "totalamt" : 5200 }
+{ "_id" : "wallet", "totalamt" : 85000 }
+
+

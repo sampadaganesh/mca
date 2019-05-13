@@ -1,0 +1,53 @@
+1.
+       db.createCollection('employee')
+      { "ok" : 1 }
+
+
+3.
+    db.employee.update({name:'AAA'},{$set:{salary:8000}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+
+4.
+ db.employee.update({},{$inc:{salary:4500}},{multi:true})
+
+5.
+ db.employee.update({name:'CCC'},{$set:{role:["Head","prof"]}})
+
+6.
+ db.employee.insert({_id:121,name:'BBB',salary:2500,role:'ASST'})
+WriteResult({ "nInserted" : 1 })
+
+> db.employee.update({name:'BBB'},{$set:{remark:'VC'}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+7.
+ db.employee.update({_id:11},{$setOnInsert:{name:'XXX',salary:10000,role:'coach'}},{upsert:true})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 11 })
+
+8.
+
+ db.createCollection('restraurants')
+      { "ok" : 1 
+
+9.
+db.restraurants.insert({_id:1,name:'Cave_N_Dine',address:{building:"MHR",coordinates:[89.9999,95.754168],street:"RajajiNagar",city:"bangalore",zipcode:560032,cuisine:"chinese"}, ratings:{date:ISODate(),grade:"S",score:10}})
+WriteResult({ "nInserted" : 1 })
+10
+
+ db.restrurants.find({},{_id:1,name:1,"address.cuisine":1})
+> db.restraurants.find({},{_id:1,name:1,"address.cuisine":1})
+
+11.
+db.restaurants.find({"address.cuisine":{$eq:"chinese"}}).pretty()
+
+ 12.
+	db.restaurants.find({"ratings.grade":{$eq:"continental"}}).pretty()
+13.
+
+ db.restaurants.find({date:1},{"ratings.grade":{$eq:"continental"}}).pretty()
+12.
+
+
+
+

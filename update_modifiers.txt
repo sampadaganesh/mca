@@ -1,0 +1,163 @@
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 20, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 55, 55, 55 ] }
+> db.student.update({_id:11}, {$mul:{sem:2.5}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.update({_id:5},{$addToset:{marks:87})
+...
+...
+> db.student.update({_id:5},{$addToset:{marks:87}})
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 0,
+        "nModified" : 0,
+        "writeError" : {
+                "code" : 9,
+                "errmsg" : "Unknown modifier: $addToset"
+        }
+})
+> db.student.update({_id:5},{$pop:{marks:-1}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 55, 55 ] }
+> db.student.update({_id:5},{$addToSet:{marks:87}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 55, 55, 87 ] }
+> db.student.update({_id:5},{$pop:{marks:1}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 55, 55 ] }
+> db.student.update({_id:5},{$addToSet:{marks:87}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.update({_id:5},{$push:{marks:100}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 55, 55, 87, 100 ] }
+> db.student.update({_id:5},{$pull:{marks:{$lt:60}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 100 ] }
+> db.student.update({_id:5},{$addToSet:{marks:86,66}})
+2019-02-05T13:53:32.418+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):1:49
+> db.student.update({_id:5},{$addToSet:{marks:86}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.update({_id:5},{$addToSet:{marks:60}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 100, 86, 60 ] }
+> db.student.update({_id:5},{$pullAll:{marks:[60,100]}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 100, 60, 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 86 ] }
+> db.student.update({_id:5},{$addToSet:{marks:60}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.update({_id:5},{$addToSet:{marks:100}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.update({$pullAll:{marks:[60,100]}})
+2019-02-05T13:59:18.511+0530 E QUERY    [js] Error: need an object :
+DBCollection.prototype._parseUpdate@src/mongo/shell/collection.js:452:1
+DBCollection.prototype.update@src/mongo/shell/collection.js:494:18
+@(shell):1:1
+> db.student.update({},{$pullAll:{marks:[60,100]}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 86, 60, 100 ] }
+> db.student.insertMany(
+... {_id:8,marks:[20,30,50,60,100]})
+2019-02-05T14:02:06.245+0530 E QUERY    [js] TypeError: documents.map is not a function :
+DBCollection.prototype.insertMany@src/mongo/shell/crud_api.js:295:1
+@(shell):1:1
+> db.student.insert({_id:8,marks:[20,30,50,60,100]})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({_id:3,marks:[20,40,50,100]})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({_id:4,marks:[20,40,,77,100]})
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({_id:6,marks:[22,40,75,100,60]})
+WriteResult({ "nInserted" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 86, 60, 100 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 50, 60, 100 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 50, 100 ] }
+{ "_id" : 4, "marks" : [ 20, 40, undefined, 77, 100 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 75, 100, 60 ] }
+> db.student.updateMany({},{$pullAll:{marks:[60,100]}})
+{ "acknowledged" : true, "matchedCount" : 6, "modifiedCount" : 5 }
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 86 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 75 ] }
+> db.student.update({_id:11},{$push:{marks:{$each:[95,90,100]}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55, 95, 90, 100 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 86 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 75 ] }
+> db.student.update({_id:11},{$push:{marks:{$each:[45,56,77],$position:2}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55, 95, 45, 56, 77, 90, 100 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 86 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 75 ] }
+> db.student.updateMany({},{$push:{marks:{$each:[45,56,77],$position:2}}})
+{ "acknowledged" : true, "matchedCount" : 6, "modifiedCount" : 6 }
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55, 95, 45, 56, 77, 45, 56, 77, 90, 100 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 87, 86, 45, 56, 77 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 45, 56, 77, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 45, 56, 77, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, 45, 56, 77, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 45, 56, 77, 75 ] }
+> db.student.update({_id:5},{$push:{marks:{$each:[10,20,30,45],$slice:-6}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55, 95, 45, 56, 77, 45, 56, 77, 90, 100 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 56, 77, 10, 20, 30, 45 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 45, 56, 77, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 45, 56, 77, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, 45, 56, 77, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 45, 56, 77, 75 ] }
+> db.student.update({_id:5},{$push:{marks:{$each:[10,20,30,45],$sort:1}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55, 95, 45, 56, 77, 45, 56, 77, 90, 100 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 10, 10, 20, 20, 30, 30, 45, 45, 56, 77 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 45, 56, 77, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 45, 56, 77, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, 45, 56, 77, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 45, 56, 77, 75 ] }
+> db.student.update({_id:5},{$push:{marks:{$each:[1,2,145],$sort:-1}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55, 95, 45, 56, 77, 45, 56, 77, 90, 100 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 145, 77, 56, 45, 45, 30, 30, 20, 20, 10, 10, 2, 1 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 45, 56, 77, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 45, 56, 77, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, 45, 56, 77, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 45, 56, 77, 75 ] }
+>  db.student.find()
+{ "_id" : 11, "name" : "sathish", "sem" : 50, "marks" : [ 55, 95, 45, 56, 77, 45, 56, 77, 90, 100 ] }
+{ "_id" : 5, "name" : "ghhgg", "marks" : [ 145, 77, 56, 45, 45, 30, 30, 20, 20, 10, 10, 2, 1 ] }
+{ "_id" : 8, "marks" : [ 20, 30, 45, 56, 77, 50 ] }
+{ "_id" : 3, "marks" : [ 20, 40, 45, 56, 77, 50 ] }
+{ "_id" : 4, "marks" : [ 20, 40, 45, 56, 77, undefined, 77 ] }
+{ "_id" : 6, "marks" : [ 22, 40, 45, 56, 77, 75 ] }

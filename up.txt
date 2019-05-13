@@ -1,0 +1,42 @@
+db.student.aggregate( 
+	{$project:
+		{
+		"name":1,
+		"namecode":
+		{ $substrBytes:["$name",0,3]
+		}
+		}
+	}
+)
+ db.student.aggregate({$match:{marks:{$gt:50}}},{$count:"Passed"})
+{ "Passed" : 6 }
+> db.student.aggregate({$match:{marks:{$gt:93}}},{$count:"Passed"})
+{ "Passed" : 4 }
+> db.student.distinct("sem")
+db.sales.aggregate(
+... [
+... {$group:{_id:{month:{$month:"$date"},day:{$dayOfMonth:"$date"},year:{$year:"$date"}}}}])
+db.invoice.aggregate( [ { $group : { _id : "$item" } } ] )
+db.invoice.aggregate(
+...    [
+...     {
+... $match : {date : "23-Sep-2018"}
+...     },
+...       {
+...         $group : {_id : {date : "$date",item : "$item"},
+...            Total_Cost: { $sum: { $multiply: [ "$rate", "$qty" ] } },
+...            Average_Quantity: { $avg: "$qty" },
+...         }
+...      }
+...   ]
+... )
+db.invoice.aggregate(
+... [
+... {
+... $group:{_id:{invoice_date:"$date", item:"$item"},
+... totalcost:{$sum:{$multiply:["$rate","$qty"]}},
+... Average_Quantity:{$avg:"$qty"},
+... }
+... }
+... ]
+...  )

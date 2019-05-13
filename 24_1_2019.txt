@@ -1,0 +1,182 @@
+24/1/2019
+
+db.details.insert({
+_id:3,
+name:"chandra",
+sem:4,
+contact:
+{
+phone:999,
+email:"kiran@gmail.com"
+},
+address:
+{
+permenent:
+{
+hno:5,streeet:5,pin:5345
+},
+current:
+{
+hno:5,streeet:5,pin:5745
+}
+}
+}
+)
+
+
+
+> db.details.insert({ _id:1,name:"kiran",sem:4},{cantact: { phone:999, email:"ki@gmail.com" }, address: {per: {hno:54,street:8,pin:97665 }, current: { hno:8,street:87,pin:85454 } } })
+WriteResult({ "nInserted" : 1 })
+
+
+> db.details.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "contact" : { "phone" : 999, "email" : "kiran@gmail.com" }, "address" : { "permenent" : { "hno" : 5, "streeet" : 5, "pin" : 5345 }, "current" : { "hno" : 5, "streeet" : 5, "pin" : 5745 } } }
+{ "_id" : 2, "name" : "chandra", "sem" : 4, "contact" : { "phone" : 9989, "email" : "rajjdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 55, "streeet" : 15, "pin" : 53465 }, "current" : { "hno" : 15, "streeet" : 65, "pin" : 9745 } } }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+> db.details.find({"address.permenent.hno":5})
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "contact" : { "phone" : 999, "email" : "kiran@gmail.com" }, "address" : { "permenent" : { "hno" : 5, "streeet" : 5, "pin" : 5345 }, "current" : { "hno" : 5, "streeet" : 5, "pin" : 5745 } } }
+
+
+var mydoc=[
+{_id:1,name:"kiran",age:21,city:"bangalore",marks:[90,99,90]},
+{_id:2,name:"chandra",age:21,city:"bangalore2",marks:[98,89,100]},
+{_id:3,name:"abhi",age:21,city:"bangalore3",marks:[90,79,99]},
+]
+
+> db.semfour.insert(mydoc)
+BulkWriteResult({
+        "writeErrors" : [ ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 3,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+
+
+update querry
+
+db.semfour.update({_id:1},{name:"kiran p"},{upsert:true})
+> db.semfour.update({_id:1},{name:"kiran p"},{upsert:true})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+> db.createCollection("user")
+{ "ok" : 1 }
+
+> ISODate()
+ISODate("2019-01-24T06:33:38.035Z")
+> db.user.insert({_id:2,status:"active",lastmodified:ISODate})
+WriteResult({ "nInserted" : 1 })
+> db.user.insert({_id:1,status:"active",lastmodified:"2019-01-24 T 11:55:00.DDDZ"})
+WriteResult({ "nInserted" : 1 })
+> db.user.find()
+{ "_id" : 1, "status" : "active", "lastmodified" : "2019-01-24 T 11:55:00.DDDZ" }
+{ "_id" : 2, "status" : "active", "lastmodified" : { "code" : "function (isoDateStr) {\n    if (!isoDateStr)\n       
+> db.user.update({_id:1},{$currentDate:{lastmodified:true,"cancellation_date":{$type:"date"}},$set:{status:"logout","cancellation_reason":"sys crash"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.user.find().pretty()
+{
+        "_id" : 1,
+        "status" : "logout",
+        "lastmodified" : ISODate("2019-01-24T06:38:54.947Z"),
+        "cancellation_date" : ISODate("2019-01-24T06:38:54.947Z"),
+        "cancellation_reason" : "sys crash"
+}
+
+> db.user.update({_id:1},{$currentDate:{lastmodified:true,"cancellation_date":{$type:"timestamp"}},$set:{status:"logout","cancellation_reason":"sys crash"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.user.find().pretty()
+{
+        "_id" : 1,
+        "status" : "logout",
+        "lastmodified" : ISODate("2019-01-24T06:41:01.499Z"),
+        "cancellation_date" : Timestamp(1548312061, 1),
+        "cancellation_reason" : "sys crash"
+}
+
+
+
+
+> db.details.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "contact" : { "phone" : 999, "email" : "kiran@gmail.com" }, "address" : { "permenent" : { "hno" : 5, "streeet" : 5, "pin" : 5345 }, "current" : { "hno" : 5, "streeet" : 5, "pin" : 5745 } } }
+{ "_id" : 2, "name" : "chandra", "sem" : 4, "contact" : { "phone" : 9989, "email" : "rajjdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 55, "streeet" : 15, "pin" : 53465 }, "current" : { "hno" : 15, "streeet" : 65, "pin" : 9745 } } }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+> db.details.update(
+{_id:1},
+{$inc:{sem:1}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.details.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 5, "contact" : { "phone" : 999, "email" : "kiran@gmail.com" }, "address" : { "permenent" : { "hno" : 5, "streeet" : 5, "pin" : 5345 }, "current" : { "hno" : 5, "streeet" : 5, "pin" : 5745 } } }
+{ "_id" : 2, "name" : "chandra", "sem" : 4, "contact" : { "phone" : 9989, "email" : "rajjdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 55, "streeet" : 15, "pin" : 53465 }, "current" : { "hno" : 15, "streeet" : 65, "pin" : 9745 } } }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+>
+
+> db.details.update( {_id:2}, {$inc:{sem:-1}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.details.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "contact" : { "phone" : 999, "email" : "kiran@gmail.com" }, "address" : { "permenent" : { "hno" : 5, "streeet" : 5, "pin" : 5345 }, "current" : { "hno" : 5, "streeet" : 5, "pin" : 5745 } } }
+{ "_id" : 2, "name" : "chandra", "sem" : 3, "contact" : { "phone" : 9989, "email" : "rajjdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 55, "streeet" : 15, "pin" : 53465 }, "current" : { "hno" : 15, "streeet" : 65, "pin" : 9745 } } }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+>
+
+
+> db.details.update( {_id:2}, {$inc:{sem:-1.5}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.details.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 4, "contact" : { "phone" : 999, "email" : "kiran@gmail.com" }, "address" : { "permenent" : { "hno" : 5, "streeet" : 5, "pin" : 5345 }, "current" : { "hno" : 5, "streeet" : 5, "pin" : 5745 } } }
+{ "_id" : 2, "name" : "chandra", "sem" : 1.5, "contact" : { "phone" : 9989, "email" : "rajjdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 55, "streeet" : 15, "pin" : 53465 }, "current" : { "hno" : 15, "streeet" : 65, "pin" : 9745 } } }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+>
+
+$mul multiply values
+> db.details.update( {_id:1}, {$mul:{sem:4}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+> db.details.find()
+{ "_id" : 1, "name" : "kiran", "sem" : 16, "contact" : { "phone" : 999, "email" : "kiran@gmail.com" }, "address" : { "permenent" : { "hno" : 5, "streeet" : 5, "pin" : 5345 }, "current" : { "hno" : 5, "streeet" : 5, "pin" : 5745 } } }
+{ "_id" : 2, "name" : "chandra", "sem" : 0, "contact" : { "phone" : 9989, "email" : "rajjdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 55, "streeet" : 15, "pin" : 53465 }, "current" : { "hno" : 15, "streeet" : 65, "pin" : 9745 } } }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+
+
+> db.details.update({_id:10},{$set:{sem:2},$setOnInsert:{name:"aba"}})
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.details.find()
+{ "_id" : 1, "sem" : 4 }
+{ "_id" : 2, "sem" : 4 }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+> db.details.update({_id:10},{$set:{sem:2},$setOnInsert:{name:"aba"}},{upsert:true})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 10 })
+> db.details.find()
+{ "_id" : 1, "sem" : 4 }
+{ "_id" : 2, "sem" : 4 }
+{ "_id" : 3, "name" : "abhi", "sem" : 4, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+{ "_id" : 10, "name" : "aba", "sem" : 2 }
+>
+
+
+
+> db.details.find()
+{ "_id" : 1, "sem" : 4 }
+{ "_id" : 2, "sem" : 4 }
+{ "_id" : 3, "name" : "abhi", "sem" : 3, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+{ "_id" : 10, "name" : "aba", "sem" : 2 }
+> db.details.update({_id:3},{$set:{sem:111},$setOnInsert:{name:"zzz"}},{upsert:true})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.details.find()
+{ "_id" : 1, "sem" : 4 }
+{ "_id" : 2, "sem" : 4 }
+{ "_id" : 3, "name" : "abhi", "sem" : 111, "contact" : { "phone" : 9989, "email" : "sjwdsn@gmail.com" }, "address" : { "permenent" : { "hno" : 50, "streeet" : 15, "pin" : 535 }, "current" : { "hno" : 95, "streeet" : 65, "pin" : 96245 } } }
+{ "_id" : 10, "name" : "aba", "sem" : 2 }
+>
+
+
+
+
+
+
+
+
+
+

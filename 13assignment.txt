@@ -1,0 +1,88 @@
+Group the document of sale based on year and compute Total amount of quantity
+
+
+db.sales.aggregate(
+[
+	{$group:
+		{_id:{year:{$year:"$date"}},
+		Totalquantity:{$sum:{"$quantity"}
+		}
+	}
+              }
+]
+)
+
+create a collection called as marks that consists of field id,ISA,Quiz,assignment and ESA
+		ISA And ESA individual marks 
+		Ass.and Quiz Array of Marks
+
+ db.marks.aggregate({$project:{_id:0,"total quiz":{$sum:"$Quiz"},"total Assignment":{$sum:"$Assignment"}}})
+{ "total quiz" : 32, "total Assignment" : 135 }
+{ "total quiz" : 55, "total Assignment" : 42 }
+{ "total quiz" : 32, "total Assignment" : 89 }
+{ "total quiz" : 32, "total Assignment" : 49 }
+
+
+using project give me the quiz and assignment total of each student
+ db.marks.aggregate({$project:{_id:0,"total":{"$sum":[{"$sum":"$Quiz"},{"$sum":"$Assignment"},"$ISA","$ESA"]}}})
+{ "total" : 263 }
+{ "total" : 213 }
+{ "total" : 257 }
+{ "total" : 167 }
+========================================================================
+
+db.marks.aggregate([
+	{$project:
+		{sum:{$sum:"$Quiz"},
+		ESA:{$sum:"$ESA"},
+	midterm:1,
+		final:1
+		total:{$sum:[{$sum:"Quiz"},{$sum:"$ESA"},"$midterm","$final"]}}}])
+
+> db.sales.aggregate([{$project:{item:1,datediff:{$subtract:[ISODate(),"$date"]}}}])
+{ "_id" : 107, "item" : "wallet", "datediff" : NumberLong(605842950) }
+{ "_id" : 108, "item" : "chocolate", "datediff" : NumberLong(605798168) }
+{ "_id" : 100, "item" : "abc", "datediff" : NumberLong(605493485) }
+{ "_id" : 102, "item" : "srs", "datediff" : NumberLong(605472324) }
+{ "_id" : 103, "item" : "pens", "datediff" : NumberLong(605459419) }
+{ "_id" : 104, "item" : "Bags", "datediff" : NumberLong(605444043) }
+{ "_id" : 105, "item" : "mobile", "datediff" : NumberLong(605429826) }
+{ "_id" : 106, "item" : "wallet", "datediff" : NumberLong(605414240) }
+> db.sales.aggregate([{$project:{item:1,datediff:{$subtract:["$_id","$quantity"]}}}])
+{ "_id" : 107, "item" : "wallet", "datediff" : 95 }
+{ "_id" : 108, "item" : "chocolate", "datediff" : 87 }
+{ "_id" : 100, "item" : "abc", "datediff" : 95 }
+{ "_id" : 102, "item" : "srs", "datediff" : 92 }
+{ "_id" : 103, "item" : "pens", "datediff" : 91 }
+{ "_id" : 104, "item" : "Bags", "datediff" : 91 }
+{ "_id" : 105, "item" : "mobile", "datediff" : 98 }
+{ "_id" : 106, "item" : "wallet", "datediff" : 84 }
+
+*******************************************************************************************
+db.marks.aggregate([
+	{$project:
+		{quiztotal:{$sum:"$Quiz"},
+		labtotal:{$sum:"$labs"},
+	midterm:1,
+		final:1,
+		total:{$add:[{$sum:"Quiz"},{$sum:"$labs"},"$midterm","$final"]}}}])
+
+db.marks.aggregate([ 
+	{$project:
+		 {sum:{$sum:"$Quiz"},
+		 ESA:{$sum:"$ESA"},
+	 midterm:1,
+		 final:1,
+		total:{$sum:[{$sum:"Quiz"},{$sum:"$ESA"},"$midterm","$final"]}}}])
+
+ db.marks.aggregate([
+... {$project:
+...  {sum:{$sum:"$Quiz"},
+...  ESA:{$sum:"$ESA"},
+...  midterm:1,
+...  final:1,
+... total:{$sum:[{$sum:"Quiz"},{$sum:"$ESA"},"$midterm","$final"]}}}])
+{ "_id" : 121, "sum" : 32, "ESA" : 56, "total" : 56 }
+{ "_id" : 122, "sum" : 55, "ESA" : 86, "total" : 86 }
+{ "_id" : 123, "sum" : 32, "ESA" : 96, "total" : 96 }
+{ "_id" : 124, "sum" : 32, "ESA" : 46, "total" : 46 }

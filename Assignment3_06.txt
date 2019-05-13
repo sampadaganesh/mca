@@ -1,0 +1,67 @@
+1.
+
+	 db.createCollection('pets')
+	{ "ok" : 1 }
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.
+	db.pets.insert({_id:111,name:"Nihan",age:5,pets:{petname:"rocky",petage:4,pettype:"dog"}})	
+	WriteResult({ "nInserted" : 1 })
+	 db.pets.insert({_id:121,name:"Rgg",age:25,pets:{petname:"billi",petage:6,pettype:"cat"}})
+	WriteResult({ "nInserted" : 1 })
+	db.pets.insert({_id:131,name:"manya",age:29,pets:{petname:"munni",petage:5,pettype:"dog"}})
+	WriteResult({ "nInserted" : 1 })
+ 	db.pets.insert({_id:141,name:"ajay",age:29,pets:{petname:"rani",petage:4,pettype:"cat"}})
+	WriteResult({ "nInserted" : 1 })
+ 	db.pets.insert({_id:151,name:"mamata",age:28,pets:{petname:"billu",petage:4,pettype:"cat"}})
+	WriteResult({ "nInserted" : 1 })
+>	db.pets.insert({_id:161,name:"aditya",age:8,pets:{petname:"tiger",petage:7,pettype:"dog"}})	
+	WriteResult({ "nInserted" : 1 })
+ 	db.pets.insert({_id:171,name:"Ishu",age:18,pets:{petname:"appu",petage:9,pettype:"rabbit"}})
+	WriteResult({ "nInserted" : 1 })
+	 db.pets.insert({_id:181,name:"ganesh",age:48,pets:{petname:"rock",petage:4,pettype:"dog"}})
+	WriteResult({ "nInserted" : 1 })
+>	db.pets.insert({_id:191,name:"mamata",age:28,pets:{petname:"raj",petage:6,pettype:"dog"}})
+	WriteResult({ "nInserted" : 1 })
+ db.pets.insert({_id:201,name:"moulya",age:18,pets:{petname:"pintu",petage:6,pettype:"dog"}})
+WriteResult({ "nInserted" : 1 })
+> db.pets.find()
+{ "_id" : 111, "name" : "Nihan", "age" : 5, "pets" : { "petname" : "rocky", "petage" : 4, "pettype" : "dog" } }
+{ "_id" : 121, "name" : "Rgg", "age" : 25, "pets" : { "petname" : "billi", "petage" : 6, "pettype" : "cat" } }
+{ "_id" : 131, "name" : "manya", "age" : 29, "pets" : { "petname" : "munni", "petage" : 5, "pettype" : "dog" } }
+{ "_id" : 141, "name" : "ajay", "age" : 29, "pets" : { "petname" : "rani", "petage" : 4, "pettype" : "cat" } }
+{ "_id" : 151, "name" : "mamata", "age" : 28, "pets" : { "petname" : "billu", "petage" : 4, "pettype" : "cat" } }
+{ "_id" : 161, "name" : "aditya", "age" : 8, "pets" : { "petname" : "tiger", "petage" : 7, "pettype" : "dog" } }
+{ "_id" : 171, "name" : "Ishu", "age" : 18, "pets" : { "petname" : "appu", "petage" : 9, "pettype" : "rabbit" } }
+{ "_id" : 181, "name" : "ganesh", "age" : 48, "pets" : { "petname" : "rock", "petage" : 4, "pettype" : "dog" } }
+{ "_id" : 191, "name" : "mamata", "age" : 28, "pets" : { "petname" : "raj", "petage" : 6, "pettype" : "dog" } }
+{ "_id" : 201, "name" : "moulya", "age" : 18, "pets" : { "petname" : "pintu", "petage" : 6, "pettype" : "dog" } }
+
+.........................................................................................................................................................................................
+
+3.
+
+ db.pets.find({"pets.pettype":"cat"})
+{ "_id" : 121, "name" : "Rgg", "age" : 25, "pets" : { "petname" : "billi", "petage" : 6, "pettype" : "cat" } }
+{ "_id" : 141, "name" : "ajay", "age" : 29, "pets" : { "petname" : "rani", "petage" : 4, "pettype" : "cat" } }
+{ "_id" : 151, "name" : "mamata", "age" : 28, "pets" : { "petname" : "billu", "petage" : 4, "pettype" : "cat" } }
+
+4.
+
+ db.pets.aggregate({$group:{_id:"$name",count:{$sum:1}}})
+{ "_id" : "aditya", "count" : 1 }
+{ "_id" : "mamata", "count" : 2 }
+{ "_id" : "moulya", "count" : 1 }
+{ "_id" : "manya", "count" : 1 }
+{ "_id" : "ajay", "count" : 1 }
+{ "_id" : "Rgg", "count" : 1 }
+{ "_id" : "ganesh", "count" : 1 }
+{ "_id" : "Nihan", "count" : 1 }
+{ "_id" : "Ishu", "count" : 1 }
+
+
+5.
+
+db.pets.find({"pets.pettype":"dog"}).limit(2)
+{ "_id" : 111, "name" : "Nihan", "age" : 5, "pets" : { "petname" : "rocky", "petage" : 4, "pettype" : "dog" } }
+{ "_id" : 131, "name" : "manya", "age" : 29, "pets" : { "petname" : "munni", "petage" : 5, "pettype" : "dog" } }

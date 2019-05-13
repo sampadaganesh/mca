@@ -1,0 +1,103 @@
+NAME:   Sampada Ganesh
+SRN: PES1201702326
+
+1.
+
+import pymongo
+from pymongo import MongoClient
+
+con = pymongo.MongoClient("mongodb://localhost")
+db = con.pes
+coll = db.Student
+
+
+def insert():
+    studentSRN = input("Enter Student SRN: : ")
+    studentName = input("Enter name : ")
+    studentSem = int(input("Enter sem : "))
+    studentClass = input("Enter class : ")
+    studentISA = int(input("Enter ISA : "))
+    studentCAType = input("Enter CA type : ")
+    studentCAMarks = int(input("Enter marks : "))
+    coll.insert_one({
+        "srn": studentSRN,
+        "name": studentName,
+        "sem": studentSem,
+        "class": studentClass,
+        "isa": studentISA,
+        "ca": {
+            "type": studentCAType,
+            "marks": studentCAMarks
+        }
+    })
+
+
+n = input("Enter the number of documents : ")
+
+for i in range(0, int(n)):
+    insert()
+
+
+2.
+
+a.
+> db.Student.find()
+{ "_id" : ObjectId("5cc0239a718187317cbab853"), "srn" : "PES1201702326", "name" : "sampada", "sem" : 4, "class" : "mca", "isa" : 30, "ca" : { "type" : "assignment", "marks" : 20 } }
+{ "_id" : ObjectId("5cc023d2718187317cbab854"), "srn" : "PES1201802321", "name" : "vaidehi", "sem" : 4, "class" : "mca", "isa" : 22, "ca" : { "type" : "quiz", "marks" : 17 } }
+{ "_id" : ObjectId("5cc023f9718187317cbab855"), "srn" : "pes120180221", "name" : "rahul", "sem" : 4, "class" : "mca", "isa" : 30, "ca" : { "type" : "quiz", "marks" : 20 } }
+{ "_id" : ObjectId("5cc02430718187317cbab856"), "srn" : "1112", "name" : "manish", "sem" : 5, "class" : "mca", "isa" : 30, "ca" : { "type" : "assignment", "marks" : 12 } }
+{ "_id" : ObjectId("5cc024db718187317cbab857"), "srn" : "1113", "name" : "teju", "sem" : 5, "class" : "mba", "isa" : 28, "ca" : { "type" : "quiz", "marks" : 22 } }
+{ "_id" : ObjectId("5cc024fa718187317cbab858"), "srn" : "1114", "name" : "sana", "sem" : 5, "class" : "mca", "isa" : 33, "ca" : { "type" : "quiz", "marks" : 19 } }
+{ "_id" : ObjectId("5cc0251c718187317cbab859"), "srn" : "1115", "name" : "vandana", "sem" : 5, "class" : "mba", "isa" : 22, "ca" : { "type" : "assignment", "marks" : 15 } }
+{ "_id" : ObjectId("5cc02540718187317cbab85a"), "srn" : "1116", "name" : "saam", "sem" : 6, "class" : "mca", "isa" : 29, "ca" : { "type" : "assignment", "marks" : 19 } }
+{ "_id" : ObjectId("5cc02560718187317cbab85b"), "srn" : "1117", "name" : "ganesh", "sem" : 5, "class" : "mca", "isa" : 35, "ca" : { "type" : "quiz", "marks" : 20 } }
+{ "_id" : ObjectId("5cc0257a718187317cbab85c"), "srn" : "1118", "name" : "nalini", "sem" : 5, "class" : "mca", "isa" : 30, "ca" : { "type" : "quiz", "marks" : 15 } }
+
+b.
+def greater():
+    for i in coll.find({"ca.type":"assignment","ca.marks":{"$gt": 15}},{"_id": 0}):
+        print(i)
+greater()
+
+output:
+	{'srn': 'PES1201702326', 'name': 'sampada', 'sem': 4, 'class': 'mca', 'isa': 30, 'ca': {'type': 'assignment', 'marks': 20}}
+	{'srn': '1116', 'name': 'saam', 'sem': 6, 'class': 'mca', 'isa': 29, 'ca': {'type': 'assignment', 'marks': 19}}
+
+c.
+def asc():
+    for i in coll.aggregate([{"$sort":{"isa":1,"ca.marks":1}}]):
+        print(i)
+asc()
+
+output:
+{'_id': ObjectId('5cc0251c718187317cbab859'), 'srn': '1115', 'name': 'vandana', 'sem': 5, 'class': 'mba', 'isa': 22, 'ca': {'type': 'assignment', 'marks': 15}}
+{'_id': ObjectId('5cc023d2718187317cbab854'), 'srn': 'PES1201802321', 'name': 'vaidehi', 'sem': 4, 'class': 'mca', 'isa': 22, 'ca': {'type': 'quiz', 'marks': 17}}
+{'_id': ObjectId('5cc024db718187317cbab857'), 'srn': '1113', 'name': 'teju', 'sem': 5, 'class': 'mba', 'isa': 28, 'ca': {'type': 'quiz', 'marks': 22}}
+{'_id': ObjectId('5cc02540718187317cbab85a'), 'srn': '1116', 'name': 'saam', 'sem': 6, 'class': 'mca', 'isa': 29, 'ca': {'type': 'assignment', 'marks': 19}}
+{'_id': ObjectId('5cc02430718187317cbab856'), 'srn': '1112', 'name': 'manish', 'sem': 5, 'class': 'mca', 'isa': 30, 'ca': {'type': 'assignment', 'marks': 12}}
+{'_id': ObjectId('5cc0257a718187317cbab85c'), 'srn': '1118', 'name': 'nalini', 'sem': 5, 'class': 'mca', 'isa': 30, 'ca': {'type': 'quiz', 'marks': 15}}
+{'_id': ObjectId('5cc0239a718187317cbab853'), 'srn': 'PES1201702326', 'name': 'sampada', 'sem': 4, 'class': 'mca', 'isa': 30, 'ca': {'type': 'assignment', 'marks': 20}}
+{'_id': ObjectId('5cc023f9718187317cbab855'), 'srn': 'pes120180221', 'name': 'rahul', 'sem': 4, 'class': 'mca', 'isa': 30, 'ca': {'type': 'quiz', 'marks': 20}}
+{'_id': ObjectId('5cc024fa718187317cbab858'), 'srn': '1114', 'name': 'sana', 'sem': 5, 'class': 'mca', 'isa': 33, 'ca': {'type': 'quiz', 'marks': 19}}
+{'_id': ObjectId('5cc02560718187317cbab85b'), 'srn': '1117', 'name': 'ganesh', 'sem': 5, 'class': 'mca', 'isa': 35, 'ca': {'type': 'quiz', 'marks': 20}}
+
+d.
+
+def update():
+    coll.update_many({},{"$inc":{"sem":1}})
+    for i in coll.find():
+        print(i)
+
+update()
+
+{'_id': ObjectId('5cc0239a718187317cbab853'), 'srn': 'PES1201702326', 'name': 'sampada', 'sem': 6, 'class': 'mca', 'isa': 30, 'ca': {'type': 'assignment', 'marks': 20}}
+{'_id': ObjectId('5cc023d2718187317cbab854'), 'srn': 'PES1201802321', 'name': 'vaidehi', 'sem': 6, 'class': 'mca', 'isa': 22, 'ca': {'type': 'quiz', 'marks': 17}}
+{'_id': ObjectId('5cc023f9718187317cbab855'), 'srn': 'pes120180221', 'name': 'rahul', 'sem': 6, 'class': 'mca', 'isa': 30, 'ca': {'type': 'quiz', 'marks': 20}}
+{'_id': ObjectId('5cc02430718187317cbab856'), 'srn': '1112', 'name': 'manish', 'sem': 7, 'class': 'mca', 'isa': 30, 'ca': {'type': 'assignment', 'marks': 12}}
+{'_id': ObjectId('5cc024db718187317cbab857'), 'srn': '1113', 'name': 'teju', 'sem': 7, 'class': 'mba', 'isa': 28, 'ca': {'type': 'quiz', 'marks': 22}}
+{'_id': ObjectId('5cc024fa718187317cbab858'), 'srn': '1114', 'name': 'sana', 'sem': 7, 'class': 'mca', 'isa': 33, 'ca': {'type': 'quiz', 'marks': 19}}
+{'_id': ObjectId('5cc0251c718187317cbab859'), 'srn': '1115', 'name': 'vandana', 'sem': 7, 'class': 'mba', 'isa': 22, 'ca': {'type': 'assignment', 'marks': 15}}
+{'_id': ObjectId('5cc02540718187317cbab85a'), 'srn': '1116', 'name': 'saam', 'sem': 8, 'class': 'mca', 'isa': 29, 'ca': {'type': 'assignment', 'marks': 19}}
+{'_id': ObjectId('5cc02560718187317cbab85b'), 'srn': '1117', 'name': 'ganesh', 'sem': 7, 'class': 'mca', 'isa': 35, 'ca': {'type': 'quiz', 'marks': 20}}
+{'_id': ObjectId('5cc0257a718187317cbab85c'), 'srn': '1118', 'name': 'nalini', 'sem': 7, 'class': 'mca', 'isa': 30, 'ca': {'type': 'quiz', 'marks': 15}}
+
